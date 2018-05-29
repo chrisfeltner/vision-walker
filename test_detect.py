@@ -38,3 +38,4 @@ if (r_value * r_value) > i_threshold and slope < a_threshold and  intercept > b_
     print("We're clear!")
 else:
     print("Something's in the way!")
+    
