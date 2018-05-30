@@ -6,11 +6,13 @@ import time
 from scipy.misc import imshow
 from PIL.Image import fromarray
  
- 
+class Kinect(object):
 #function to get depth image from kinect
-def get_depth():
-    array,_ = freenect.sync_get_depth(format = freenect.DEPTH_MM)
-    return array
+    def get_depth():
+        array,_ = freenect.sync_get_depth(format = freenect.DEPTH_MM)
+        return array
+
+    def get_BGR_image():
 
 if __name__ == "__main__":
     f = open('middlepixel.txt','w')
