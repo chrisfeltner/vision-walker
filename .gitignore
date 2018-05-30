@@ -6,3 +6,4 @@ imageoutput.txt
 .vscode/
 local/
 vision-walker/
+*.pyc

@@ -8,11 +8,12 @@ from PIL.Image import fromarray
  
 class Kinect(object):
 #function to get depth image from kinect
-    def get_depth():
+    def get_depth(self):
         array,_ = freenect.sync_get_depth(format = freenect.DEPTH_MM)
         return array
 
-    def get_BGR_image():
+    def get_BGR_image(self):
+        pass
 
 if __name__ == "__main__":
     f = open('middlepixel.txt','w')
