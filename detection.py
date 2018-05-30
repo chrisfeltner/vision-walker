@@ -18,7 +18,6 @@ class Detector(object):
             sum = 0.0
             for x in range(starting_width_index, ending_width_index):
                 sum += array[y][x]
-                print(array[y][x])
             average_array[y] = sum/number_of_elements
         return average_array
 
@@ -36,9 +35,3 @@ class Detector(object):
 
     def get_distance_from_object(self, averaged_array):
         pass
-
-if __name__ == '__main__':
-    dt = Detector()
-    array = np.array([[1,2,3,4,5,6,7],[1,2,3,4,5,6,7]])
-    print(array)
-    print(dt.get_average_values(7, array))
