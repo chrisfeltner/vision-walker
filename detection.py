@@ -1,7 +1,11 @@
+from scipy import stats
+import numpy as np
+
 from settings import I_THRESHOLD, A_THRESHOLD, B_THRESHOLD
 
 class Detector(object):
     def get_average_values(width, array):
+        
 
     # Detects obstables by identifying non-linear distance
     # Returns True if an obstacle is detected
@@ -15,3 +19,4 @@ class Detector(object):
             return True
 
     def get_distance_from_object(averaged_array):
+
