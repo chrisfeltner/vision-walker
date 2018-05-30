@@ -23,9 +23,9 @@ for answer in xrange(0, test_count):
     answers.append((hasObstacle, distance))
 print(answers)
 
-for i in frange(0.2, 0.7, 0.1):
+for i in frange(0.2, 0.8, 0.1):
     for a in xrange(-11, 0):
-        for b in xrange(4000, 8000, 100):
+        for b in xrange(2000, 8250, 250):
             counter += 1
             report.write('Test {} I:{} A:{} B:{}\n'.format(counter, i, a, b))
             correct = 0
@@ -33,7 +33,7 @@ for i in frange(0.2, 0.7, 0.1):
             false_neg = 0
             for test in xrange(0, test_count):
                 result = test_detect.detect(str(test + 1) + '.txt', i, a, b)
-                if result == bool(answers[test][0]):
+                if str(result) == answers[test][0]:
                     result_string = "Correct"
                     correct += 1
                 elif result is True:

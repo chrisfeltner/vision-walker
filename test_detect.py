@@ -8,7 +8,7 @@ def detect(input_file, i_threshold, a_threshold, b_threshold):
     # print(file_name)
     array = np.loadtxt(input_file)
     array = array[array != 0]
-# Need to rework ^ to work with 2d arrays!
+# Need to rework ^ to work with 2d arrays?
     indicies = np.arange(1, len(array) + 1)
 
     slope, intercept, r_value, p_value, std_err = stats.mstats.linregress(indicies, array)
@@ -25,6 +25,6 @@ def detect(input_file, i_threshold, a_threshold, b_threshold):
     # b_threshold = 3000
 
     if (r_value * r_value) > i_threshold and slope < a_threshold and intercept > b_threshold:
-        return True
+        return False  # NO OBJECT DETECTED
     else:
-        return False
+        return True  # OBJECT DETECTED
