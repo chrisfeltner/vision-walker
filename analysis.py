@@ -7,6 +7,7 @@ def frange(start, stop, step):
         yield x
         x += step
 
+
 report = open('DetailedReport.txt', "w")
 summary = open('Summary.txt', "w")
 summary.write('TestNum, I, A, B, Correct, FalsePositives, FalseNegatives\n')
@@ -42,8 +43,10 @@ for i in frange(0.2, 0.8, 0.1):
                 else:
                     result_string = "False Negative"
                     false_neg += 1
-                report.write('{}.txt Expected: {} Actual: {} Result: {}\n'.format(str(test + 1), answers[test][0], result, result_string))
+                report.write('{}.txt Expected: {} Actual: {} Result: {}\n'.format(
+                    str(test + 1), answers[test][0], result, result_string))
             report.write('\n')
-            summary.write('{} {} {} {} {} {} {}\n'.format(counter, i, a, b, correct, false_pos, false_neg))
+            summary.write('{} {} {} {} {} {} {}\n'.format(
+                counter, i, a, b, correct, false_pos, false_neg))
 report.close()
 summary.close()
