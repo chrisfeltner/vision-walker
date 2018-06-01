@@ -35,3 +35,18 @@ class Detector(object):
 
     def get_distance_from_object(self, averaged_array):
         pass
+
+    def linear_segmentation(self, averaged_array):
+        pass
+
+    def sliding_window_segmentation(self, averaged_array, max_error):
+        breakpoints = []
+        anchor = 0
+        while anchor < averaged_array.shape and i < averaged_array.shape:
+            i = 1
+            while stats.mstats.sem(array[anchor:i]) < max_error:
+                i = i + 1
+            breakpoints.append(i)
+            anchor = anchor + i
+        return breakpoints
+        
