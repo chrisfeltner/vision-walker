@@ -1,7 +1,7 @@
 from scipy import stats
 import numpy as np
 
-from settings import I_THRESHOLD, A_THRESHOLD, B_THRESHOLD
+from settings import I_THRESHOLD, A_THRESHOLD, B_THRESHOLD, ERROR_COEFFICIENT
 
 class Detector(object):
 
@@ -42,6 +42,8 @@ class Detector(object):
         else:
             return True
 
+    # This will return the minimum distance from an object recognized by
+    # linear piecewise segmentation
     def get_distance_from_object(self, averaged_array):
         segments = self.linear_segmentation(averaged_array)
         if len(segments) > 2:
@@ -52,10 +54,15 @@ class Detector(object):
         else:
             return -1
 
+    # This function will run Sliding Window Segmentation on the given array using std error
+    # multiplied by a coefficient for the measure of max_error
+    # You should run this function on an array after you have called get_average_values
+    # on that array.
     def linear_segmentation(self, averaged_array):
-        return self.sliding_window_segmentation(averaged_array, np.std(averaged_array)*.15)
+        return self.sliding_window_segmentation(averaged_array, np.std(averaged_array) * ERROR_COEFFICIENT)
 
     # Given a 1D numpy array, this function will remove values of 0.0 from the array
+    # It will return the resulting array
     def remove_zero_values(self, averaged_array):
         zero_indices = []
         for index in range(0, len(averaged_array)):
@@ -63,6 +70,8 @@ class Detector(object):
                 zero_indices.append(index)
         return np.delete(averaged_array, zero_indices)
 
+    # Given a 1D numpy array and a max error value, this function will return a list of
+    # indicies where the Sliding Window Segmentation function recognizes a segment
     def sliding_window_segmentation(self, averaged_array, max_error):
         breakpoints = [0]
         anchor = 0
