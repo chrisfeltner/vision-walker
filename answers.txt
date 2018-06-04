@@ -1,7 +1,13 @@
-7
+10
 True 25
 True 66.5
 True 118.5
+True 0
+False 0
+True 76
+True 92
+False 0
+True 68
 True 0
 True 12
 False 0

@@ -31,7 +31,7 @@ def detect(input_file, i_threshold, a_threshold, b_threshold):
     # a_threshold = -4
     # b_threshold = 3000
 
-    if (r_value * r_value) > i_threshold and slope < a_threshold and intercept > b_threshold:
+    if (r_value * r_value) > i_threshold and slope < a_threshold and intercept < b_threshold:
         return False  # NO OBJECT DETECTED
     else:
         return True  # OBJECT DETECTED

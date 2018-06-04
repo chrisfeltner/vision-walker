@@ -16,8 +16,13 @@ counter = 0
 
 answers = []
 
+
 answer_file = open('answers.txt', 'r')
 test_count = int(answer_file.readline())
+
+correct_array = [0] * test_count
+falsepos_array = [0] * test_count
+falseneg_array = [0] * test_count
 
 for answer in xrange(0, test_count):
     hasObstacle, distance = answer_file.readline().split(' ')
@@ -26,7 +31,7 @@ print(answers)
 
 for i in frange(0.2, 0.8, 0.1):
     for a in xrange(-11, 0):
-        for b in xrange(2000, 8250, 250):
+        for b in xrange(2000, 9000, 1000):
             counter += 1
             report.write('Test {} I:{} A:{} B:{}\n'.format(counter, i, a, b))
             correct = 0
@@ -37,16 +42,23 @@ for i in frange(0.2, 0.8, 0.1):
                 if str(result) == answers[test][0]:
                     result_string = "Correct"
                     correct += 1
+                    correct_array[test] += 1
                 elif result is True:
                     result_string = "False Positive"
                     false_pos += 1
+                    falsepos_array[test] += 1
                 else:
                     result_string = "False Negative"
                     false_neg += 1
+                    falseneg_array[test] += 1
                 report.write('{}.txt Expected: {} Actual: {} Result: {}\n'.format(
                     str(test + 1), answers[test][0], result, result_string))
             report.write('\n')
             summary.write('{} {} {} {} {} {} {}\n'.format(
                 counter, i, a, b, correct, false_pos, false_neg))
+report.write("File Results")
+for i in xrange(0, 10):
+    report.write("{}.txt Correct: {} False Positive: {} False Negative: {}".format(
+        str(i + 1), correct_array[i], falsepos_array[i], falseneg_array[i]))
 report.close()
 summary.close()
