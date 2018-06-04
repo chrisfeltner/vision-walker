@@ -4,6 +4,14 @@ import numpy as np
 from settings import I_THRESHOLD, A_THRESHOLD, B_THRESHOLD
 
 class Detector(object):
+
+    # Given a 2D array and a width, this function will return a numpy array with
+    # the average of each row from width_for_avg/2 before the center column and 
+    # width_for_avg/2 after the cetner column. For example, if the 2D array is
+    # an image, this function will return the average pixel values of the pixels
+    # width_for_avg/2 pixels or less away from the center line of the image. It does
+    # NOT consider values of 0 in the average since this is used as an error state by
+    # the Kinect camera.
     def get_average_values(self, width_for_avg, array):
         assert width_for_avg != 0
         height, width = array.shape
@@ -17,7 +25,8 @@ class Detector(object):
         for y in range(0, height):
             sum = 0.0
             for x in range(starting_width_index, ending_width_index):
-                sum += array[y][x]
+                if x != 0:
+                    sum += array[y][x]
             average_array[y] = sum/number_of_elements
         return average_array
 
@@ -44,7 +53,15 @@ class Detector(object):
             return -1
 
     def linear_segmentation(self, averaged_array):
-        return self.sliding_window_segmentation(averaged_array, np.std(averaged_array)*.9)
+        return self.sliding_window_segmentation(averaged_array, np.std(averaged_array)*.15)
+
+    # Given a 1D numpy array, this function will remove values of 0.0 from the array
+    def remove_zero_values(self, averaged_array):
+        zero_indices = []
+        for index in range(0, len(averaged_array)):
+            if(averaged_array[index] == 0):
+                zero_indices.append(index)
+        return np.delete(averaged_array, zero_indices)
 
     def sliding_window_segmentation(self, averaged_array, max_error):
         breakpoints = [0]
@@ -64,7 +81,9 @@ class Detector(object):
 
 if __name__ == '__main__':
     dt = Detector()
-    array = np.array([10,9,8,4,4,4,7,6,5,4,2,2,2,2,3,2,1,0])
+    array = dt.get_average_values(100,np.loadtxt('1.txt'))
     print(np.std(array))
+    print(dt.remove_zero_values(array))
+    array = dt.remove_zero_values(array)
     print(dt.linear_segmentation(array))
     print(dt.get_distance_from_object(array))
