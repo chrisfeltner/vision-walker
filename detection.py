@@ -35,13 +35,10 @@ class Detector(object):
 
     def get_distance_from_object(self, averaged_array):
         segments = self.linear_segmentation(averaged_array)
-        print(segments)
         if len(segments) > 2:
             distances = []
             for index in segments:
                 distances.append(averaged_array[index])
-                print(averaged_array[index])
-                print(distances)
             return max(distances)
         else:
             return -1
