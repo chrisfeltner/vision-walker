@@ -34,10 +34,20 @@ class Detector(object):
             return True
 
     def get_distance_from_object(self, averaged_array):
-        pass
+        segments = self.linear_segmentation(averaged_array)
+        print(segments)
+        if len(segments) > 2:
+            distances = []
+            for index in segments:
+                distances.append(averaged_array[index])
+                print(averaged_array[index])
+                print(distances)
+            return max(distances)
+        else:
+            return -1
 
     def linear_segmentation(self, averaged_array):
-        return self.sliding_window_segmentation(averaged_array, np.std(averaged_array)/2)
+        return self.sliding_window_segmentation(averaged_array, np.std(averaged_array)*.9)
 
     def sliding_window_segmentation(self, averaged_array, max_error):
         breakpoints = [0]
@@ -57,6 +67,7 @@ class Detector(object):
 
 if __name__ == '__main__':
     dt = Detector()
-    array = np.array([1,2,3,4,5, 250, 251, 252, 6, 7, 8])
+    array = np.array([1,2,3,4, 5,6,250,251,252, 6, 7, 8, 250, 251])
     print(np.std(array))
     print(dt.linear_segmentation(array))
+    print(dt.get_distance_from_object(array))
