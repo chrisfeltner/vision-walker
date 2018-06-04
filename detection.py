@@ -28,7 +28,7 @@ class Detector(object):
         indicies = np.arange(1, len(averaged_array) + 1)
         slope, intercept, r_value, p_value, std_err = stats.mstats.linregress(indicies, array)
 
-        if (r_value * r_value) > I_THRESHOLD and slope < A_THRESHOLD and  intercept > B_THRESHOLD:
+        if (r_value * r_value) > I_THRESHOLD and slope < A_THRESHOLD and  intercept < B_THRESHOLD:
             return False
         else:
             return True
