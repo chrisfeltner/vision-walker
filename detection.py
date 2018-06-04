@@ -37,9 +37,9 @@ class Detector(object):
         segments = self.linear_segmentation(averaged_array)
         if len(segments) > 2:
             distances = []
-            for index in segments:
-                distances.append(averaged_array[index])
-            return max(distances)
+            for i in range(0, len(segments) - 1):
+                distances.append(averaged_array[segments[i]])
+            return min(distances)
         else:
             return -1
 
@@ -64,7 +64,7 @@ class Detector(object):
 
 if __name__ == '__main__':
     dt = Detector()
-    array = np.array([1,2,3,4, 5,6,250,251,252, 6, 7, 8, 250, 251])
+    array = np.array([10,9,8,4,4,4,7,6,5,4,2,2,2,2,3,2,1,0])
     print(np.std(array))
     print(dt.linear_segmentation(array))
     print(dt.get_distance_from_object(array))
