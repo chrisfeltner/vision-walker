@@ -42,11 +42,21 @@ class Detector(object):
     def sliding_window_segmentation(self, averaged_array, max_error):
         breakpoints = []
         anchor = 0
-        while anchor < averaged_array.shape and i < averaged_array.shape:
+        i = 1
+        while anchor < averaged_array.shape[0] - 1:
             i = 1
-            while stats.mstats.sem(array[anchor:i]) < max_error:
+
+            while abs(np.std(averaged_array[anchor:anchor + i])) < max_error and anchor + i < averaged_array.shape[0]:
                 i = i + 1
-            breakpoints.append(i)
-            anchor = anchor + i
+                print(averaged_array[anchor:anchor + i])
+                print(abs(np.std(averaged_array[anchor:anchor + i])))
+            breakpoints.append(anchor + i - 1)
+            anchor = anchor + i - 1
         return breakpoints
-        
+
+
+if __name__ == '__main__':
+    dt = Detector()
+    array = np.array([1,2,3,4,5, 250, 251, 252, 6, 7, 8])
+    print(np.std(array))
+    print(dt.sliding_window_segmentation(array, np.std(array)/2))
