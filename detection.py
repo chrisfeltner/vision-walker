@@ -37,7 +37,7 @@ class Detector(object):
         pass
 
     def linear_segmentation(self, averaged_array):
-        pass
+        return self.sliding_window_segmentation(averaged_array, np.std(averaged_array)/2)
 
     def sliding_window_segmentation(self, averaged_array, max_error):
         breakpoints = [0]
@@ -59,4 +59,4 @@ if __name__ == '__main__':
     dt = Detector()
     array = np.array([1,2,3,4,5, 250, 251, 252, 6, 7, 8])
     print(np.std(array))
-    print(dt.sliding_window_segmentation(array, np.std(array)/2))
+    print(dt.linear_segmentation(array))
