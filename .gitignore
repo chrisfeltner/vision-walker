@@ -7,3 +7,4 @@ imageoutput.txt
 local/
 vision-walker/
 *.pyc
+data/

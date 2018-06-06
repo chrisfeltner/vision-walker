@@ -1,6 +1,8 @@
 from scipy import stats
 import numpy as np
 
+import matplotlib.pyplot as plot
+
 from settings import I_THRESHOLD, A_THRESHOLD, B_THRESHOLD, ERROR_COEFFICIENT
 
 class Detector(object):
@@ -90,9 +92,14 @@ class Detector(object):
 
 if __name__ == '__main__':
     dt = Detector()
-    array = dt.get_average_values(100,np.loadtxt('1.txt'))
+    array = dt.get_average_values(100,np.loadtxt('data/9.txt'))
     print(np.std(array))
     print(dt.remove_zero_values(array))
     array = dt.remove_zero_values(array)
-    print(dt.linear_segmentation(array))
+    segments = dt.linear_segmentation(array)
+    print(segments)
     print(dt.get_distance_from_object(array))
+    plot.plot(array)
+    for segment in segments:
+        plot.axvline(x=segment, color='k', linestyle='--')
+    plot.show()

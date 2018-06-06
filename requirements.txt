@@ -2,3 +2,4 @@ numpy==1.14.3
 pep8==1.7.1
 Pillow==5.1.0
 scipy==1.1.0
+matplotlib==2.2.2
