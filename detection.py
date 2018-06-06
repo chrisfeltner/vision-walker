@@ -86,20 +86,34 @@ class Detector(object):
             anchor = anchor + i - 1
         return breakpoints
 
+    def plot_segmentation(self, averaged_array):
+        self.remove_zero_values(averaged_array)
+        segments = self.linear_segmentation(averaged_array)
+        plot.plot(averaged_array)
+        for segment in segments:
+            plot.axvline(x=segment, color='k', linestyle='--')
+        plot.show()       
+
     def bottom_up_segmentation(self, averaged_array, max_error):
+        # segments = []
+        # merge_cost = []
+        # for i in xrange(0, len(averaged_array), 2):
+        #     segments.append(i)
+        # for segment in range(0, len(segments) - 2):
+        #     merge_cost.append(np.std(averaged_array[segment, segment + 2]))
+
+        # while min(merge_cost) < max_error:
         pass
+
 
 
 if __name__ == '__main__':
     dt = Detector()
-    array = dt.get_average_values(100,np.loadtxt('data/9.txt'))
+    array = dt.get_average_values(100,np.loadtxt('data/3.txt'))
     print(np.std(array))
     print(dt.remove_zero_values(array))
     array = dt.remove_zero_values(array)
     segments = dt.linear_segmentation(array)
     print(segments)
     print(dt.get_distance_from_object(array))
-    plot.plot(array)
-    for segment in segments:
-        plot.axvline(x=segment, color='k', linestyle='--')
-    plot.show()
+    dt.plot_segmentation(array)
