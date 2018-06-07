@@ -21,14 +21,13 @@ class Detector(object):
         starting_width_index = center - (width_for_avg/2)
         ending_width_index = center + (width_for_avg/2) + width_for_avg%2
         average_array = np.zeros(height)
-        number_of_elements = ending_width_index - starting_width_index
-        if ending_width_index == starting_width_index:
-            number_of_elements = 1
         for y in range(0, height):
             sum = 0.0
+            number_of_elements = 1
             for x in range(starting_width_index, ending_width_index):
-                if x != 0:
+                if array[y][x] != 0:
                     sum += array[y][x]
+                    number_of_elements = number_of_elements + 1
             average_array[y] = sum/number_of_elements
         return average_array
 
@@ -109,7 +108,7 @@ class Detector(object):
 
 if __name__ == '__main__':
     dt = Detector()
-    array = dt.get_average_values(100,np.loadtxt('data/3.txt'))
+    array = dt.get_average_values(25,np.loadtxt('data/6.txt'))
     print(np.std(array))
     print(dt.remove_zero_values(array))
     array = dt.remove_zero_values(array)
