@@ -1,14 +1,14 @@
 10
-True 25
-True 66.5
-True 118.5
+True 635
+True 1689
+False 3010
 True 0
 False 0
-True 76
-True 92
+True 1930
+True 2337
 False 0
-True 68
+True 1727
 True 0
-True 12
+True 304
 False 0
-True 121
+True 3073

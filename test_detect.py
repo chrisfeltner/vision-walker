@@ -9,6 +9,7 @@ def detect(input_file, i_threshold, a_threshold, b_threshold):
     if len(np.shape(array)) > 1:
         height, width = np.shape(array)
         array = array[:, width / 2]
+        print("Height {} Width {} size {}".format(height, width, len(array)))
     array = array[array != 0]
     if len(array) == 0:
         # For now we can assume super close object filling screen = bad
