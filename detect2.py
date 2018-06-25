@@ -1,62 +1,74 @@
 import numpy as np
 
 
+# input - Depth image.
+# width - Determines where we pick the y2/x2 for the slope calculation.
+# threshold - Max detection distance.
 def detect(input, width, threshold):
     array = input
+
+    # Only required if we're not averageing the array by this point.
+    # Gets the 640 x 480 array and turns it into a 1-d array across the middle.
     if len(np.shape(array)) > 1:
         h, w = np.shape(array)
         array = array[:, w / 2]
-        #print("Height {} Width {} size {}".format(h, w, len(array)))
+
+    # Remove 0s, as they are error values.
     array = array[array != 0]
+
+    # For now we assume super close object mostly filling screen = bad.
     if len(array) == 0 or len(array) < 260:
-        # For now we can assume super close object filling screen = bad
-        #print("Distance is 1")
-        #print("Len is " + str(len(array)))
         return 1
 
+    # Flip the array so that we have it in a more intuitive order.
     array = array[::-1]
 
+    # Index, used to keep track of where we break out of the while loop.
     index = 0
 
+    # Current closest distance, updated if we break out of the 1st while loop.
     distance = 9999
 
     while index < len(array) - width:
+        # Slope calculation
         x1 = index
         y1 = array[index]
         x2 = index + width
         y2 = array[index + width]
 
-        #print("{} {} {} {}".format(x1, x2, y1, y2))
-
         slope = (y2 - y1) / (x2 - x1)
-        #print(slope)
 
         index += width
+
+        # Break out of the loop if we have a non-positive slope.
         if slope < 0:
             break
 
+    # Continue where we left off from ^
+    # Find the lowest y-value, corresponding to the closest point.
     while index < len(array):
         if array[index] < distance:
             distance = array[index]
         index += 1
-        
-    #print("Distance is " + str(distance))
+
+    # We've found an object if the distance is less than our threshold.
     if distance > threshold:
         return -1  # NO OBJECT DETECTED
     else:
         return distance  # OBJECT DETECTED
 
 
+# Same as above, but we read the depth image from a file
 def detect_file(input_file, width, threshold):
     array = np.loadtxt(input_file)
+
     if len(np.shape(array)) > 1:
         h, w = np.shape(array)
         array = array[:, w / 2]
-        # print("Height {} Width {} size {}".format(height, width, len(array)))
+
     array = array[array != 0]
+
     if len(array) == 0 or len(array) < 300:
-        # For now we can assume super close object filling screen = bad
-        #print("Distance is 1")
         return 1
 
     array = array[::-1]
@@ -71,10 +83,7 @@ def detect_file(input_file, width, threshold):
         x2 = index + width
         y2 = array[index + width]
 
-        #print("{} {} {} {}".format(x1, x2, y1, y2))
-
         slope = (y2 - y1) / (x2 - x1)
-        #print(slope)
 
         index += width
         if slope < 0:
@@ -84,10 +93,8 @@ def detect_file(input_file, width, threshold):
         if array[index] < distance:
             distance = array[index]
         index += 1
-        
-    #print("Distance is " + str(distance))
+
     if distance > threshold:
         return -1  # NO OBJECT DETECTED
     else:
         return distance  # OBJECT DETECTED
-        
