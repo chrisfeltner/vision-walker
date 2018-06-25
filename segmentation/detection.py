@@ -81,7 +81,7 @@ class Detector(object):
             j = 0
             while abs(np.std(averaged_array[anchor + j:anchor + i])) < max_error and anchor + i < averaged_array.shape[0]:
                 i = i + 1
-                if anchor + i > 150:
+                if i - anchor > 150:
                     j = j + 1
             breakpoints.append(anchor + i - 1)
             anchor = anchor + i - 1
@@ -110,7 +110,7 @@ class Detector(object):
 
 if __name__ == '__main__':
     dt = Detector()
-    array = dt.get_average_values(25,np.loadtxt('data/2.txt'))
+    array = dt.get_average_values(50,np.loadtxt('data/5.txt'))
     print(np.std(array))
     print(dt.remove_zero_values(array))
     array = dt.remove_zero_values(array)
