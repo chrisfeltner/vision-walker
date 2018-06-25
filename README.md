@@ -24,3 +24,13 @@ In the project's current state, we have 2 seperate Python files. `kinect.py` is 
 
 The main file for this project is `test_detect.py`. To run this, use the command `python test_detect.py imageoutput.txt`. The program will output whether it detect an obstacle or not.
 
+--------------------------------------
+
+This branch has additional functions for running through test files, along with an experimental `detect2.py` file.
+
+`detect2.py` requires a `answers.txt` file. The first line of this file is the number of test cases to run though. Each subsequent line will have a boolean True or False corresponding to whether or not the associated depth image contains an object, and an integer corresponding to the actual measured distance of the object, if there is one.
+
+Each line in `answers.txt` requires a depth image saved as either a 1-d or 2-d array in a text file with the name `(test#).txt`.
+
+`kinect2.py` requires libfreenect and its Python bindings to be installed. The files and instructions for libfreenect can be found here: https://github.com/OpenKinect/libfreenect
+
