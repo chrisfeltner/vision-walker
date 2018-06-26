@@ -5,10 +5,6 @@
 #include <pcl/io/openni_grabber.h>
 #include <pcl/common/time.h>
 
-VisionWalker::VisionWalker()
-{
-
-}
 
 pcl::PCLPointCloud2::Ptr VisionWalker::createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter = NULL)
 {
