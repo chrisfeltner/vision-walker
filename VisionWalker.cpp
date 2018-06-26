@@ -14,7 +14,7 @@ pcl::PCLPointCloud2::Ptr VisionWalker::createVoxelGrid(pcl::PCLPointCloud2::Ptr 
     }
 
     pcl::PCLPointCloud2::Ptr filteredCloud = pcl::PCLPointCloud2();
-    pcl::VoxelGrid<pcl::PointXYZ> voxelFilter;
+    pcl::VoxelGrid<pcl::PCLPointCloud2> voxelFilter;
     voxelFilter.setInputCloud(cloudToFilter);
     voxelFilter.setLeafSize(0.01f, 0.01f, 0.01f);
     voxelFilter.filter(*filteredCloud);

@@ -1,4 +1,5 @@
 #include <pcl/point_types.h>
+#include <pcl/PCLPointCloud2.h>
 
 namespace VisionWalker
 {
