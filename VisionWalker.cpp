@@ -10,7 +10,7 @@ VisionWalker::VisionWalker()
 
 }
 
-pcl::PCLPointCloud2::Ptr createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter = NULL)
+pcl::PCLPointCloud2::Ptr VisionWalker::createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter = NULL)
 {
     if(cloudToFilter == NULL)
     {
@@ -25,7 +25,7 @@ pcl::PCLPointCloud2::Ptr createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter 
     return filteredCloud;
 }
 
-pcl::PCLPointCloud2::Ptr runPassThroughFilter(pcl::PCLPointCloud2::Ptr cloudToFilter = NULL,
+pcl::PCLPointCloud2::Ptr VisionWalker::runPassThroughFilter(pcl::PCLPointCloud2::Ptr cloudToFilter = NULL,
     char *field, double min, double max)
 {
     if(cloudToFilter == NULL)
