@@ -17,7 +17,7 @@ pcl::PCLPointCloud2::Ptr VisionWalker::createVoxelGrid(pcl::PCLPointCloud2::Ptr 
 }
 
 pcl::PCLPointCloud2::Ptr VisionWalker::runPassThroughFilter(pcl::PCLPointCloud2::Ptr cloudToFilter, char *field, double min, double max)
-
+{
     pcl::PCLPointCloud2::Ptr filteredCloud = (new pcl::PCLPointCloud2());
     pcl::PassThrough<pcl::PointXYZ> passThroughFilter;
     passThroughFilter.setInputCloud(cloudToFilter);
