@@ -2,6 +2,8 @@
 
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/passthrough.h>
+#include <pcl/io/openni_grabber.h>
+#include <pcl/common/time.h>
 
 VisionWalker::VisionWalker()
 {
