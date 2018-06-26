@@ -6,14 +6,9 @@
 #include <pcl/common/time.h>
 
 
-pcl::PCLPointCloud2::Ptr VisionWalker::createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter = NULL)
+pcl::PCLPointCloud2::Ptr VisionWalker::createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter)
 {
-    if(cloudToFilter == NULL)
-    {
-        return NULL;
-    }
-
-    pcl::PCLPointCloud2::Ptr filteredCloud = pcl::PCLPointCloud2();
+    pcl::PCLPointCloud2::Ptr filteredCloud = (new pcl::PCLPointCloud2());
     pcl::VoxelGrid<pcl::PCLPointCloud2> voxelFilter;
     voxelFilter.setInputCloud(cloudToFilter);
     voxelFilter.setLeafSize(0.01f, 0.01f, 0.01f);
@@ -21,15 +16,9 @@ pcl::PCLPointCloud2::Ptr VisionWalker::createVoxelGrid(pcl::PCLPointCloud2::Ptr 
     return filteredCloud;
 }
 
-pcl::PCLPointCloud2::Ptr VisionWalker::runPassThroughFilter(pcl::PCLPointCloud2::Ptr cloudToFilter = NULL,
-    char *field, double min, double max)
-{
-    if(cloudToFilter == NULL)
-    {
-        return NULL;
-    }
+pcl::PCLPointCloud2::Ptr VisionWalker::runPassThroughFilter(pcl::PCLPointCloud2::Ptr cloudToFilter, char *field, double min, double max)
 
-    pcl::PCLPointCloud2::Ptr filteredCloud = pcl::PCLPointCloud2();
+    pcl::PCLPointCloud2::Ptr filteredCloud = (new pcl::PCLPointCloud2());
     pcl::PassThrough<pcl::PointXYZ> passThroughFilter;
     passThroughFilter.setInputCloud(cloudToFilter);
     passThroughFilter.setFilterFieldName(field);
