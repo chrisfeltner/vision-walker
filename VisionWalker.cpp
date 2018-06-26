@@ -23,6 +23,6 @@ pcl::PCLPointCloud2::Ptr VisionWalker::runPassThroughFilter(pcl::PCLPointCloud2:
     passThroughFilter.setInputCloud(cloudToFilter);
     passThroughFilter.setFilterFieldName(field);
     passThroughFilter.setFilterLimits(min, max);
-    passThroughFilter.filter(*filteredCloud);
+    passThroughFilter.applyFilter(filteredCloud);
     return filteredCloud;
 }
