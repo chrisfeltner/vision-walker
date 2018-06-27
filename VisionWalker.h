@@ -2,6 +2,8 @@
 #include <pcl/point_cloud.h>
 #include <pcl/PCLPointCloud2.h>
 
+#ifndef VISION_WALKER
+#define VISION_WALKER
 
 class VisionWalker
 {
@@ -15,3 +17,5 @@ class VisionWalker
 
     private:
 };
+
+#endif
