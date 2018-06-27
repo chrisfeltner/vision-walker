@@ -32,7 +32,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr runPassThroughFilter(pcl::PointCloud<pcl::Po
 
 void process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
 {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = runPassThroughFilter(cloud, "z", 0.4, 4.0);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr myCloud = runPassThroughFilter(cloud, "z", 0.4, 4.0);
 }
 
 void run()

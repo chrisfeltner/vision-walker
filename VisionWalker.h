@@ -11,7 +11,7 @@ class VisionWalker
         pcl::PCLPointCloud2::Ptr createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter);
         pcl::PointCloud<pcl::PointXYZ>::Ptr runPassThroughFilter(pcl::PointCloud<pcl::PointXYZ>::Ptr cloudToFilter, char *field, double min, double max);
         void run();
+        void process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud);
 
     private:
-        void process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud);
 };
