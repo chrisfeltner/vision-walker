@@ -8,9 +8,10 @@
 #include <pcl/io/openni_grabber.h>
 #include <pcl/common/time.h>
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr createVoxelGrid(pcl::PointCloud<pcl::PointXYZ>::Ptr cloudToFilter)
+
+pcl::PCLPointCloud2::Ptr createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter)
 {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr filteredCloud(new pcl::PointCloud<pcl::PointXYZ>;
+    pcl::PCLPointCloud2::Ptr filteredCloud (new pcl::PCLPointCloud2());
     pcl::VoxelGrid<pcl::PCLPointCloud2> voxelFilter;
     voxelFilter.setInputCloud(cloudToFilter);
     voxelFilter.setLeafSize(0.01f, 0.01f, 0.01f);
@@ -27,4 +28,9 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr runPassThroughFilter(pcl::PointCloud<pcl::Po
     passThroughFilter.setFilterLimits(min, max);
     passThroughFilter.filter(*filteredCloud);
     return filteredCloud;
+}
+
+int main(int argc, char const *argv[])
+{
+    return 0;
 }

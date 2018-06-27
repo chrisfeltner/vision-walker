@@ -8,7 +8,7 @@ class VisionWalker
     public:
         VisionWalker(){}
 
-        pcl::PointCloud<pcl::PointXYZ>::Ptr createVoxelGrid(pcl::PointCloud<pcl::PointXYZ>::Ptr cloudToFilter);
+        pcl::PCLPointCloud2::Ptr createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter);
         pcl::PointCloud<pcl::PointXYZ>::Ptr runPassThroughFilter(pcl::PointCloud<pcl::PointXYZ>::Ptr cloudToFilter, char *field, double min, double max);
 
     private:
