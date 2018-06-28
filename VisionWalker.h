@@ -11,7 +11,7 @@ class VisionWalker
     public:
     VisionWalker()
     {
-        viewer = pcl::visualization::CloudViewer("PCL OpenNI Viewer");
+        viewer = new pcl::visualization::CloudViewer("PCL OpenNI Viewer");
     }
 
     pcl::PCLPointCloud2::Ptr createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter);
