@@ -1,6 +1,7 @@
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
 #include <pcl/PCLPointCloud2.h>
+#include <pcl/visualization/cloud_viewer.h>
 
 #ifndef VISION_WALKER
 #define VISION_WALKER
@@ -15,7 +16,8 @@ class VisionWalker
         void run();
         void process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud);
 
-        private:
+    private:
+        pcl::visualization::CloudViewer viewer("PCL OpenNI Viewer");
 };
 
 #endif

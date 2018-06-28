@@ -12,6 +12,7 @@
 #include <pcl/common/time.h>
 
 
+
 pcl::PCLPointCloud2::Ptr VisionWalker::createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter)
 {
     pcl::PCLPointCloud2::Ptr filteredCloud (new pcl::PCLPointCloud2());
@@ -35,7 +36,12 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::runPassThroughFilter(const pcl
 
 void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
 {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr myCloud = runPassThroughFilter(cloud, "z", 0.4, 4.0);
+    if(!viewer.wasStopped())
+    {
+        pcl::PointCloud<pcl::PointXYZ>::Ptr myCloud = runPassThroughFilter(cloud, "z", 0.4, 4.0);
+        viewer.showCloud(myCloud);
+    }
+    
 }
 
 void VisionWalker::run()
@@ -47,9 +53,18 @@ void VisionWalker::run()
 
     knightsWhoGrabNi->registerCallback(shrubbery);
     knightsWhoGrabNi->start();
+
+    while(!viewer.wasStopped())
+    {
+        boost::this_thread::sleep(boost:posix_time::seconds(1));
+    }
+
+    knightsWhoGrabNi->stop();
 }
 
 int main(int argc, char const *argv[])
 {
+    VisionWalker() vw;
+    vw.run();
     return 0;
 }
