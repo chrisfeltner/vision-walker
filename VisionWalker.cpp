@@ -41,8 +41,10 @@ void run()
 {
     pcl::Grabber *knightsWhoGrabNi = new pcl::OpenNIGrabber();
 
-    boost::function<void (const pcl::PointCloud<pcl::PointXYZ>::ConstPtr&)> shrubbery = 
-        boost::bind(&VisionWalker::process, this, _1);
+    // boost::function<void (const pcl::PointCloud<pcl::PointXYZ>::ConstPtr&)> shrubbery = 
+    //     boost::bind(&VisionWalker::process, this, _1);
+
+    const auto shrubbery = std::bind(&process, std::placeholders::_1);
 
     knightsWhoGrabNi->registerCallback(shrubbery);
     knightsWhoGrabNi->start();
