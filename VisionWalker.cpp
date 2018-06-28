@@ -36,10 +36,10 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::runPassThroughFilter(const pcl
 
 void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
 {
-    if(!viewer->wasStopped())
+    if(!viewer.wasStopped())
     {
         pcl::PointCloud<pcl::PointXYZ>::Ptr myCloud = runPassThroughFilter(cloud, "z", 0.4, 4.0);
-        viewer->showCloud(myCloud);
+        viewer.showCloud(myCloud);
     }
     
 }
@@ -54,9 +54,9 @@ void VisionWalker::run()
     knightsWhoGrabNi->registerCallback(shrubbery);
     knightsWhoGrabNi->start();
 
-    while(!viewer->wasStopped())
+    while(!viewer.wasStopped())
     {
-        boost::this_thread::sleep(boost::posix_time::seconds(1));
+        boost::this_thread::sleep(boost:::posix_time::seconds(1));
     }
 
     knightsWhoGrabNi->stop();

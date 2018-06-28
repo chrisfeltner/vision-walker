@@ -9,17 +9,18 @@
 class VisionWalker
 {
     public:
-        VisionWalker(){
-            viewer = new pcl::visualization::CloudViewer("PCL OpenNI Viewer");
-        }
+    VisionWalker()
+    {
+        viewer = pcl::visualization::CloudViewer("PCL OpenNI Viewer");
+    }
 
-        pcl::PCLPointCloud2::Ptr createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter);
-        pcl::PointCloud<pcl::PointXYZ>::Ptr runPassThroughFilter(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToFilter, char *field, double min, double max);
-        void run();
-        void process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud);
+    pcl::PCLPointCloud2::Ptr createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr runPassThroughFilter(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToFilter, char *field, double min, double max);
+    void run();
+    void process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud);
 
     private:
-      pcl::visualization::CloudViewer::Ptr viewer;
+        pcl::visualization::CloudViewer viewer;
 };
 
 #endif
