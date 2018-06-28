@@ -46,9 +46,9 @@ void run()
     //     boost::bind(&VisionWalker::process, this, _1);
 
     boost::function<void(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &)> f =
-        boost::bind(&SimpleOpenNIViewer::cloud_cb_, this, _1);
+        boost::bind(&VisionWalker::cloud_cb_, this, _1);
 
-    knightsWhoGrabNi->registerCallback(shrubbery);
+    knightsWhoGrabNi->registerCallback(f);
     knightsWhoGrabNi->start();
 }
 
