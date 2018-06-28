@@ -45,7 +45,7 @@ void VisionWalker::run()
     boost::function<void (const pcl::PointCloud<pcl::PointXYZ>::ConstPtr&)> shrubbery = 
         boost::bind(&VisionWalker::process, this, _1);
 
-    knightsWhoGrabNi->registerCallback(f);
+    knightsWhoGrabNi->registerCallback(shrubbery);
     knightsWhoGrabNi->start();
 }
 
