@@ -56,7 +56,7 @@ void VisionWalker::run()
 
     while(!viewer.wasStopped())
     {
-        boost::this_thread::sleep(boost:posix_time::seconds(1));
+        boost::this_thread::sleep(boost::posix_time::seconds(1));
     }
 
     knightsWhoGrabNi->stop();
@@ -64,7 +64,7 @@ void VisionWalker::run()
 
 int main(int argc, char const *argv[])
 {
-    VisionWalker() vw;
+    VisionWalker vw;
     vw.run();
     return 0;
 }
