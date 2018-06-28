@@ -20,7 +20,7 @@ class VisionWalker
     void process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud);
 
     private:
-        pcl::visualization::CloudViewer viewer;
+    pcl::visualization::CloudViewer* viewer;
 };
 
 #endif
