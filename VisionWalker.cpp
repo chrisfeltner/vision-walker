@@ -1,6 +1,7 @@
 #include "VisionWalker.h"
 
 #include <iostream>
+#include <functional>
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 #include <pcl/filters/voxel_grid.h>
