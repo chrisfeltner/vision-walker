@@ -33,7 +33,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr runPassThroughFilter(const pcl::PointCloud<p
     return filteredCloud;
 }
 
-void process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
+void cloud_cb_(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
 {
     pcl::PointCloud<pcl::PointXYZ>::Ptr myCloud = runPassThroughFilter(cloud, "z", 0.4, 4.0);
 }
@@ -45,7 +45,8 @@ void run()
     // boost::function<void (const pcl::PointCloud<pcl::PointXYZ>::ConstPtr&)> shrubbery = 
     //     boost::bind(&VisionWalker::process, this, _1);
 
-    const auto shrubbery = std::bind(&process, std::placeholders::_1);
+    boost::function<void(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &)> f =
+        boost::bind(&SimpleOpenNIViewer::cloud_cb_, this, _1);
 
     knightsWhoGrabNi->registerCallback(shrubbery);
     knightsWhoGrabNi->start();
