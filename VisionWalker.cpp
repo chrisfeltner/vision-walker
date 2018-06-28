@@ -12,7 +12,7 @@
 #include <pcl/common/time.h>
 
 
-pcl::PCLPointCloud2::Ptr createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter)
+pcl::PCLPointCloud2::Ptr VisionWalker::createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter)
 {
     pcl::PCLPointCloud2::Ptr filteredCloud (new pcl::PCLPointCloud2());
     pcl::VoxelGrid<pcl::PCLPointCloud2> voxelFilter;
@@ -22,7 +22,7 @@ pcl::PCLPointCloud2::Ptr createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter)
     return filteredCloud;
 }
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr runPassThroughFilter(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToFilter, char *field, double min, double max)
+pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::runPassThroughFilter(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToFilter, char *field, double min, double max)
 {
     pcl::PointCloud<pcl::PointXYZ>::Ptr filteredCloud (new pcl::PointCloud<pcl::PointXYZ>);
     pcl::PassThrough<pcl::PointXYZ> passThroughFilter;
@@ -33,20 +33,17 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr runPassThroughFilter(const pcl::PointCloud<p
     return filteredCloud;
 }
 
-void cloud_cb_(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
+void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
 {
     pcl::PointCloud<pcl::PointXYZ>::Ptr myCloud = runPassThroughFilter(cloud, "z", 0.4, 4.0);
 }
 
-void run()
+void VisionWalker::run()
 {
     pcl::Grabber *knightsWhoGrabNi = new pcl::OpenNIGrabber();
 
-    // boost::function<void (const pcl::PointCloud<pcl::PointXYZ>::ConstPtr&)> shrubbery = 
-    //     boost::bind(&VisionWalker::process, this, _1);
-
-    boost::function<void(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &)> f =
-        boost::bind(&VisionWalker::cloud_cb_, this, _1);
+    boost::function<void (const pcl::PointCloud<pcl::PointXYZ>::ConstPtr&)> shrubbery = 
+        boost::bind(&VisionWalker::process, this, _1);
 
     knightsWhoGrabNi->registerCallback(f);
     knightsWhoGrabNi->start();
