@@ -10,6 +10,7 @@
 #include <pcl/point_types.h>
 #include <pcl/io/openni_grabber.h>
 #include <pcl/common/time.h>
+#include <pcl/conversions.h>
 
 
 
