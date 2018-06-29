@@ -11,6 +11,9 @@
 #include <pcl/io/openni_grabber.h>
 #include <pcl/common/time.h>
 #include <pcl/conversions.h>
+#include <pcl/sample_consensus/model_types.h>
+#include <pcl/sample_consensus/method_types.h>
+#include <pcl/sample_consensus/sac_segmentation.h>
 
 
 
@@ -33,6 +36,11 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::runPassThroughFilter(const pcl
     passThroughFilter.setFilterLimits(min, max);
     passThroughFilter.filter(*filteredCloud);
     return filteredCloud;
+}
+
+void VisionWalker::runPlanarSegmentation(const pcl::PointCloud<pcl::PointXYZ::ConstPtr cloudToSegment, pcl::ModelCoefficients::Ptr coefficients, pcl::PointIndices::Ptr inliers)
+{
+
 }
 
 void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
