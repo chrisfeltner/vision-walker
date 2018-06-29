@@ -40,7 +40,14 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::runPassThroughFilter(const pcl
 
 void VisionWalker::runPlanarSegmentation(const pcl::PointCloud<pcl::PointXYZ::ConstPtr cloudToSegment, pcl::ModelCoefficients::Ptr coefficients, pcl::PointIndices::Ptr inliers)
 {
+    pcl::SACSegmentation<pcl::PointXYZ> segmentation;
+    segmentation.setOptimizeCoefficients(true);
+    segmentation.setModelType(pcl::SACMODEL_PLANE);
+    segmentation.setMethodType(pcl::SAC_RANSAC);
+    segmentation.setDistanceThreshold(0.01);
 
+    segmentation.setInputCloud(cloudToSegment);
+    segmentation.segment(*inliers, *coefficients);
 }
 
 void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
