@@ -40,7 +40,7 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud
     if(!viewer->wasStopped())
     {
         pcl::PointCloud<pcl::PointXYZ>::Ptr passThroughCloud = runPassThroughFilter(cloud, "z", 0.4, 4.0);
-        pcl::PCLPointCloud2::Ptr passThroughCloud2;
+        pcl::PCLPointCloud2::Ptr passThroughCloud2(new pcl::PCLPointCloud2);
         pcl::toPCLPointCloud2(passThroughCloud, passThroughCloud2);
         pcl::PCLPointCloud2::Ptr voxelCloud2 = createVoxelGrid(passThroughCloud2);
         pcl::PointCloud<pcl::PointXYZ>::Ptr voxelCloud(new pcl::PointCloud<pcl::PointXYZ>);
