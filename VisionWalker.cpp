@@ -60,10 +60,17 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud
         pcl::PCLPointCloud2::Ptr voxelCloud2 = createVoxelGrid(passThroughCloud2);
         pcl::PointCloud<pcl::PointXYZ>::Ptr voxelCloud(new pcl::PointCloud<pcl::PointXYZ>);
         pcl::fromPCLPointCloud2(*voxelCloud2, *voxelCloud);
-        viewer->showCloud(voxelCloud);
         pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
         pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
         runPlanarSegmentation(voxelCloud, coefficients, inliers);
+        pcl::ExtractIndicies<pcl::PointXYZ> extract;
+        pcl::PointCloud<pcl::PointXYZ>::Ptr extractCloud (new pcl::PointCloud<pcl::PointXYZ>);
+        extract.setInputCloud(voxelCloud);
+        extract.setIndices(inliers);
+        extract.setNegative(false);
+        extract.filter(extractCloud);
+        viewer->showCloud(voxelCloud);
+        viewer->showCloud(extractCloud);
     }
     
 }
