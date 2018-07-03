@@ -70,7 +70,6 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud
         extract.setNegative(false);
         extract.filter(*extractCloud);
         viewer->showCloud(voxelCloud);
-        viewer->showCloud(extractCloud);
     }
     
 }
