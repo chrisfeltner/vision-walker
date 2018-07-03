@@ -27,10 +27,10 @@ pcl::PCLPointCloud2::Ptr VisionWalker::createVoxelGrid(pcl::PCLPointCloud2::Ptr 
     return filteredCloud;
 }
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::runPassThroughFilter(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToFilter, char *field, double min, double max)
+pcl::PointCloud<pcl::PointXYZRGB>::Ptr VisionWalker::runPassThroughFilter(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr cloudToFilter, char *field, double min, double max)
 {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr filteredCloud (new pcl::PointCloud<pcl::PointXYZ>);
-    pcl::PassThrough<pcl::PointXYZ> passThroughFilter;
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr filteredCloud (new pcl::PointCloud<pcl::PointXYZRGB>);
+    pcl::PassThrough<pcl::PointXYZRGB> passThroughFilter;
     passThroughFilter.setInputCloud(cloudToFilter);
     passThroughFilter.setFilterFieldName(field);
     passThroughFilter.setFilterLimits(min, max);
@@ -38,9 +38,9 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::runPassThroughFilter(const pcl
     return filteredCloud;
 }
 
-void VisionWalker::runPlanarSegmentation(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToSegment, pcl::ModelCoefficients::Ptr coefficients, pcl::PointIndices::Ptr inliers)
+void VisionWalker::runPlanarSegmentation(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr cloudToSegment, pcl::ModelCoefficients::Ptr coefficients, pcl::PointIndices::Ptr inliers)
 {
-    pcl::SACSegmentation<pcl::PointXYZ> segmentation;
+    pcl::SACSegmentation<pcl::PointXYZRGB> segmentation;
     segmentation.setOptimizeCoefficients(true);
     segmentation.setModelType(pcl::SACMODEL_PLANE);
     segmentation.setMethodType(pcl::SAC_RANSAC);
@@ -50,21 +50,21 @@ void VisionWalker::runPlanarSegmentation(const pcl::PointCloud<pcl::PointXYZ>::C
     segmentation.segment(*inliers, *coefficients);
 }
 
-void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
+void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr &cloud)
 {
     if(!viewer->wasStopped())
     {
-        pcl::PointCloud<pcl::PointXYZ>::Ptr passThroughCloud = runPassThroughFilter(cloud, "z", 0.4, 4.0);
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr passThroughCloud = runPassThroughFilter(cloud, "z", 0.4, 4.0);
         pcl::PCLPointCloud2::Ptr passThroughCloud2(new pcl::PCLPointCloud2);
         pcl::toPCLPointCloud2(*passThroughCloud, *passThroughCloud2);
         pcl::PCLPointCloud2::Ptr voxelCloud2 = createVoxelGrid(passThroughCloud2);
-        pcl::PointCloud<pcl::PointXYZ>::Ptr voxelCloud(new pcl::PointCloud<pcl::PointXYZ>);
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr voxelCloud(new pcl::PointCloud<pcl::PointXYZRGB>);
         pcl::fromPCLPointCloud2(*voxelCloud2, *voxelCloud);
         pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
         pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
         runPlanarSegmentation(voxelCloud, coefficients, inliers);
-        pcl::ExtractIndices<pcl::PointXYZ> extract;
-        pcl::PointCloud<pcl::PointXYZ>::Ptr extractCloud (new pcl::PointCloud<pcl::PointXYZ>);
+        pcl::ExtractIndices<pcl::PointXYZRGB> extract;
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr extractCloud (new pcl::PointCloud<pcl::PointXYZRGB>);
         extract.setInputCloud(voxelCloud);
         extract.setIndices(inliers);
         extract.setNegative(true);
@@ -79,7 +79,7 @@ void VisionWalker::run()
 {
     pcl::Grabber *knightsWhoGrabNi = new pcl::OpenNIGrabber();
 
-    boost::function<void (const pcl::PointCloud<pcl::PointXYZ>::ConstPtr&)> shrubbery = 
+    boost::function<void (const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr&)> shrubbery = 
         boost::bind(&VisionWalker::process, this, _1);
 
     knightsWhoGrabNi->registerCallback(shrubbery);
