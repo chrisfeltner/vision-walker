@@ -63,7 +63,7 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud
         pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
         pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
         runPlanarSegmentation(voxelCloud, coefficients, inliers);
-        pcl::ExtractIndicies<pcl::PointXYZ> extract;
+        pcl::ExtractIndices<pcl::PointXYZ> extract;
         pcl::PointCloud<pcl::PointXYZ>::Ptr extractCloud (new pcl::PointCloud<pcl::PointXYZ>);
         extract.setInputCloud(voxelCloud);
         extract.setIndices(inliers);
