@@ -15,10 +15,10 @@ class VisionWalker
     }
 
     pcl::PCLPointCloud2::Ptr createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter);
-    pcl::PointCloud<pcl::PointXYZRGBAAA>::Ptr runPassThroughFilter(const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr cloudToFilter, char *field, double min, double max);
+    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr runPassThroughFilter(const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr cloudToFilter, char *field, double min, double max);
     void runPlanarSegmentation(const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr cloudToSegment, pcl::ModelCoefficients::Ptr coefficients, pcl::PointIndices::Ptr inliers);
     void run();
-    void process(const pcl::PointCloud<pcl::PointXYZRGBAA>::ConstPtr &cloud);
+    void process(const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr &cloud);
 
     private:
     pcl::visualization::CloudViewer* viewer;
