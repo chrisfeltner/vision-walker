@@ -75,6 +75,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr extractPoints(const pcl::PointCloud<pcl::Poi
         pcl::fromPCLPointCloud2(*voxelCloud2, *voxelCloud);
         std::vector<pcl::ModelCoefficients::Ptr> coefficients_vector;
         std::vector<pcl::PointIndices::Ptr> inliers_vector;
+        bool conditions = true;
         do
         {
             pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
@@ -86,8 +87,9 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr extractPoints(const pcl::PointCloud<pcl::Poi
                 inliers_vector.push_back(inliers);
             }
             voxelCloud = extractPoints(voxelCloud, inliers);
+            conditions = inliers->indices.size() != 0 && inliers->indices.size() > INLIER_THRESHOLD;
         } 
-        while (inliers->indices.size() != 0 && inliers->indices.size() > INLIER_THRESHOLD);
+        while (conditions);
         for (int i = 0; i < coefficients_vector.size(); i++)
         {
             printf("%f %f %f %f", coefficients_vector[i]->values[0], coefficients_vector[i]->values[1], coefficients_vector[i]->values[2], coefficients_vector[i]->values[3]);
