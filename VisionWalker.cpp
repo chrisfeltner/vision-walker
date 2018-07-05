@@ -83,7 +83,7 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr &c
         mps.setAngularThreshold(0.017453 * 2.0);
         mps.setInputNormals(normal_cloud);
         mps.setInputCloud(voxelCloud);
-        std::vector< pcl::PlanarRegion< pcl::PointT > > regions;
+        std::vector< pcl::PlanarRegion< PointT > > regions;
         mps.segmentAndRefine(regions);
         //viewer->showCloud(voxelCloud);
         viewer->showCloud(voxelCloud);
