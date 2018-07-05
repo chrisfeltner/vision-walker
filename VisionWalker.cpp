@@ -85,9 +85,8 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr &c
         mps.setInputCloud(voxelCloud);
         std::vector< pcl::PlanarRegion< pcl::PointXYZRGBA > > regions;
         mps.segmentAndRefine(regions);
-        viewer->resetCameraViewpoint();
         //viewer->showCloud(voxelCloud);
-        viewer->showCloud(extractCloud);
+        viewer->showCloud(voxelCloud);
     }
     
 }
