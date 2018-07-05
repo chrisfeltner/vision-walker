@@ -71,7 +71,7 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr &c
         // extract.setIndices(inliers);
         // extract.setNegative(true);
         // extract.filter(*extractCloud);
-        pcl::NormalEstimation(pcl::PointXYZRGBA, pcl::Normal) normal_estimation;
+        pcl::NormalEstimation<pcl::PointXYZRGBA, pcl::Normal> normal_estimation;
         normal_estimation.setInputCloud(voxelCloud);
         pcl::PointCloud<pcl::Normal>::Ptr normal_cloud (new pcl::PointCloud<pcl::Normal>);
         pcl::search::KdTree<pcl::PointXYZRGBA>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZRGBA>());
