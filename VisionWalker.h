@@ -23,7 +23,8 @@ class VisionWalker
 
     private:
     pcl::visualization::CloudViewer* viewer;
-    const int INLIER_THRESHOLD = 10000;
+    const int INLIER_THRESHOLD = 20000;
+    const int RANSAC_DISTANCE_THRESHOLD = 0.03;
 };
 
 #endif
