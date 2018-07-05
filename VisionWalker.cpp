@@ -79,11 +79,11 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr &c
         normal_estimation.setRadiusSearch(0.03);
         normal_estimation.compute(*normal_cloud);
         pcl::OrganizedMultiPlaneSegmentation<pcl::PointXYZRGBA, pcl::Normal, pcl::Label> mps;
-        mps::setMinInliers(10000);
+        mps.setMinInliers(10000);
         mps.setAngularThreshold(0.017453 * 2.0);
         mps.setInputNormals(normal_cloud);
         mps.setInputCloud(voxelCloud);
-        std::vector< pcl::PlanarRegion< pcl::PointXYZRGBA > > regions;
+        std::vector< pcl::PlanarRegion< PointT > > regions;
         mps.segmentAndRefine(regions);
         //viewer->showCloud(voxelCloud);
         viewer->showCloud(voxelCloud);
