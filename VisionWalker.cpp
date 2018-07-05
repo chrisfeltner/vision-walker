@@ -29,10 +29,10 @@ pcl::PCLPointCloud2::Ptr VisionWalker::createVoxelGrid(pcl::PCLPointCloud2::Ptr 
     return filteredCloud;
 }
 
-pcl::PointCloud<pcl::PointXYZRGBA>::Ptr VisionWalker::runPassThroughFilter(const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr cloudToFilter, char *field, double min, double max)
+pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::runPassThroughFilter(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToFilter, char *field, double min, double max)
 {
-    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr filteredCloud (new pcl::PointCloud<pcl::PointXYZRGBA>);
-    pcl::PassThrough<pcl::PointXYZRGBA> passThroughFilter;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr filteredCloud (new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::PassThrough<pcl::PointXYZ> passThroughFilter;
     passThroughFilter.setInputCloud(cloudToFilter);
     passThroughFilter.setFilterFieldName(field);
     passThroughFilter.setFilterLimits(min, max);
@@ -40,9 +40,9 @@ pcl::PointCloud<pcl::PointXYZRGBA>::Ptr VisionWalker::runPassThroughFilter(const
     return filteredCloud;
 }
 
-void VisionWalker::runPlanarSegmentation(const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr cloudToSegment, pcl::ModelCoefficients::Ptr coefficients, pcl::PointIndices::Ptr inliers)
+void VisionWalker::runPlanarSegmentation(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToSegment, pcl::ModelCoefficients::Ptr coefficients, pcl::PointIndices::Ptr inliers)
 {
-    pcl::SACSegmentation<pcl::PointXYZRGBA> segmentation;
+    pcl::SACSegmentation<pcl::PointXYZ> segmentation;
     segmentation.setOptimizeCoefficients(true);
     segmentation.setModelType(pcl::SACMODEL_PLANE);
     segmentation.setMethodType(pcl::SAC_RANSAC);
@@ -52,39 +52,59 @@ void VisionWalker::runPlanarSegmentation(const pcl::PointCloud<pcl::PointXYZRGBA
     segmentation.segment(*inliers, *coefficients);
 }
 
-void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr &cloud)
+pcl::PointCloud<pcl::PointXYZ>::Ptr extractPoints(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inliers)
+{
+    pcl::ExtractIndices<pcl::PointXYZ> extract;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr extractCloud(new pcl::PointCloud<pcl::PointXYZ>);
+    extract.setInputCloud(cloud);
+    extract.setIndices(inliers);
+    extract.setNegative(true);
+    extract.filter(*extractCloud);
+    return extractCloud;
+}
+
+    void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
 {
     if(!viewer->wasStopped())
     {
-        pcl::PointCloud<pcl::PointXYZRGBA>::Ptr passThroughCloud = runPassThroughFilter(cloud, "z", 0.4, 4.0);
+        pcl::PointCloud<pcl::PointXYZ>::Ptr passThroughCloud = runPassThroughFilter(cloud, "z", 0.4, 4.0);
         pcl::PCLPointCloud2::Ptr passThroughCloud2(new pcl::PCLPointCloud2);
         pcl::toPCLPointCloud2(*passThroughCloud, *passThroughCloud2);
         pcl::PCLPointCloud2::Ptr voxelCloud2 = createVoxelGrid(passThroughCloud2);
-        pcl::PointCloud<pcl::PointXYZRGBA>::Ptr voxelCloud(new pcl::PointCloud<pcl::PointXYZRGBA>);
+        pcl::PointCloud<pcl::PointXYZ>::Ptr voxelCloud(new pcl::PointCloud<pcl::PointXYZ>);
         pcl::fromPCLPointCloud2(*voxelCloud2, *voxelCloud);
-        // pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
-        // pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
-        // runPlanarSegmentation(voxelCloud, coefficients, inliers);
-        // pcl::ExtractIndices<pcl::PointXYZRGBA> extract;
-        // pcl::PointCloud<pcl::PointXYZRGBA>::Ptr extractCloud (new pcl::PointCloud<pcl::PointXYZRGBA>);
-        // extract.setInputCloud(voxelCloud);
-        // extract.setIndices(inliers);
-        // extract.setNegative(true);
-        // extract.filter(*extractCloud);
-        pcl::NormalEstimation<pcl::PointXYZRGBA, pcl::Normal> normal_estimation;
-        normal_estimation.setInputCloud(voxelCloud);
-        pcl::PointCloud<pcl::Normal>::Ptr normal_cloud (new pcl::PointCloud<pcl::Normal>);
-        pcl::search::KdTree<pcl::PointXYZRGBA>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZRGBA>());
-        normal_estimation.setSearchMethod(tree);
-        normal_estimation.setRadiusSearch(0.03);
-        normal_estimation.compute(*normal_cloud);
-        pcl::OrganizedMultiPlaneSegmentation<pcl::PointXYZRGBA, pcl::Normal, pcl::Label> mps;
-        mps.setMinInliers(10000);
-        mps.setAngularThreshold(0.017453 * 2.0);
-        mps.setInputNormals(normal_cloud);
-        mps.setInputCloud(voxelCloud);
-        std::vector< pcl::PlanarRegion< pcl::PointXYZRGBA > > regions;
-        mps.segmentAndRefine(regions);
+        pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
+        pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
+        std::vector<pcl::ModelCoefficients::Ptr> coefficients_vector;
+        std::vector<pcl::PointIndices::Ptr> inliers_vector;
+        runPlanarSegmentation(voxelCloud, coefficients, inliers);
+        while(inliers->indices.size() != 0 && inliers->indices.size() > INLIER_THRESHOLD)
+        {
+            coefficients_vector.push_back(coefficients);
+            inliers_vector.push_back(inliers);
+            voxelCloud = extractPoints(voxelCloud, inliers);
+            coefficients = new pcl::ModelCoefficients;
+            inliers = new pcl::PointIndices;
+            runPlanarSegmentation(voxelCloud, coefficents, inliers);
+        }
+        for(int i = 0; i < coefficients.size(); i++)
+        {
+            printf("%f %f %f %f", coefficients_vector[i]->values[0], coefficients_vector[i]->values[1], coefficients_vector[i]->values[2], coefficients_vector[i]->values[3]);
+        }
+        // pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> normal_estimation;
+        // normal_estimation.setInputCloud(voxelCloud);
+        // pcl::PointCloud<pcl::Normal>::Ptr normal_cloud (new pcl::PointCloud<pcl::Normal>);
+        // pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>());
+        // normal_estimation.setSearchMethod(tree);
+        // normal_estimation.setRadiusSearch(0.03);
+        // normal_estimation.compute(*normal_cloud);
+        // pcl::OrganizedMultiPlaneSegmentation<pcl::PointXYZ, pcl::Normal, pcl::Label> mps;
+        // mps.setMinInliers(10000);
+        // mps.setAngularThreshold(0.017453 * 2.0);
+        // mps.setInputNormals(normal_cloud);
+        // mps.setInputCloud(voxelCloud);
+        // std::vector< pcl::PlanarRegion< pcl::PointXYZ > > regions;
+        // mps.segmentAndRefine(regions);
         //viewer->showCloud(voxelCloud);
         viewer->showCloud(voxelCloud);
     }
@@ -95,7 +115,7 @@ void VisionWalker::run()
 {
     pcl::Grabber *knightsWhoGrabNi = new pcl::OpenNIGrabber();
 
-    boost::function<void (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr&)> shrubbery = 
+    boost::function<void (const pcl::PointCloud<pcl::PointXYZ>::ConstPtr&)> shrubbery = 
         boost::bind(&VisionWalker::process, this, _1);
 
     knightsWhoGrabNi->registerCallback(shrubbery);
