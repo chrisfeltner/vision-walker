@@ -52,7 +52,7 @@ void VisionWalker::runPlanarSegmentation(const pcl::PointCloud<pcl::PointXYZ>::C
     segmentation.segment(*inliers, *coefficients);
 }
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr extractPoints(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointIndices::Ptr inliers)
+pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::extractPoints(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointIndices::Ptr inliers)
 {
     pcl::ExtractIndices<pcl::PointXYZ> extract;
     pcl::PointCloud<pcl::PointXYZ>::Ptr extractCloud(new pcl::PointCloud<pcl::PointXYZ>);
