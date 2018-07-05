@@ -73,21 +73,22 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr extractPoints(const pcl::PointCloud<pcl::Poi
         pcl::PCLPointCloud2::Ptr voxelCloud2 = createVoxelGrid(passThroughCloud2);
         pcl::PointCloud<pcl::PointXYZ>::Ptr voxelCloud(new pcl::PointCloud<pcl::PointXYZ>);
         pcl::fromPCLPointCloud2(*voxelCloud2, *voxelCloud);
-        pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
-        pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
         std::vector<pcl::ModelCoefficients::Ptr> coefficients_vector;
         std::vector<pcl::PointIndices::Ptr> inliers_vector;
-        runPlanarSegmentation(voxelCloud, coefficients, inliers);
-        while(inliers->indices.size() != 0 && inliers->indices.size() > INLIER_THRESHOLD)
+        do
         {
-            coefficients_vector.push_back(coefficients);
-            inliers_vector.push_back(inliers);
-            voxelCloud = extractPoints(voxelCloud, inliers);
-            coefficients (new pcl::ModelCoefficients);
-            inliers (new pcl::PointIndices);
+            pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
+            pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
             runPlanarSegmentation(voxelCloud, coefficients, inliers);
-        }
-        for(int i = 0; i < coefficients_vector.size(); i++)
+            if(inliers->indices.size() != 0)
+            {
+                coefficients_vector.push_back(coefficients);
+                inliers_vector.push_back(inliers);
+            }
+            voxelCloud = extractPoints(voxelCloud, inliers);
+        } 
+        while (inliers->indices.size() != 0 && inliers->indices.size() > INLIER_THRESHOLD);
+        for (int i = 0; i < coefficients_vector.size(); i++)
         {
             printf("%f %f %f %f", coefficients_vector[i]->values[0], coefficients_vector[i]->values[1], coefficients_vector[i]->values[2], coefficients_vector[i]->values[3]);
         }
