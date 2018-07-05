@@ -46,7 +46,7 @@ void VisionWalker::runPlanarSegmentation(const pcl::PointCloud<pcl::PointXYZ>::C
     segmentation.setOptimizeCoefficients(true);
     segmentation.setModelType(pcl::SACMODEL_PLANE);
     segmentation.setMethodType(pcl::SAC_RANSAC);
-    segmentation.setDistanceThreshold(0.01);
+    segmentation.setDistanceThreshold(0.03);
 
     segmentation.setInputCloud(cloudToSegment);
     segmentation.segment(*inliers, *coefficients);
