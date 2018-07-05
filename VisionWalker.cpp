@@ -69,6 +69,7 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr &c
         extract.setIndices(inliers);
         extract.setNegative(true);
         extract.filter(*extractCloud);
+        viewer->resetCameraViewpoint();
         //viewer->showCloud(voxelCloud);
         viewer->showCloud(extractCloud);
     }
