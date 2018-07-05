@@ -52,7 +52,7 @@ void VisionWalker::runPlanarSegmentation(const pcl::PointCloud<pcl::PointXYZ>::C
     segmentation.segment(*inliers, *coefficients);
 }
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr extractPoints(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inliers)
+pcl::PointCloud<pcl::PointXYZ>::Ptr extractPoints(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointIndices::Ptr inliers)
 {
     pcl::ExtractIndices<pcl::PointXYZ> extract;
     pcl::PointCloud<pcl::PointXYZ>::Ptr extractCloud(new pcl::PointCloud<pcl::PointXYZ>);
@@ -87,7 +87,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr extractPoints(const pcl::PointCloud<pcl::Poi
             inliers = new pcl::PointIndices;
             runPlanarSegmentation(voxelCloud, coefficents, inliers);
         }
-        for(int i = 0; i < coefficients.size(); i++)
+        for(int i = 0; i < coefficients_vector.size(); i++)
         {
             printf("%f %f %f %f", coefficients_vector[i]->values[0], coefficients_vector[i]->values[1], coefficients_vector[i]->values[2], coefficients_vector[i]->values[3]);
         }
