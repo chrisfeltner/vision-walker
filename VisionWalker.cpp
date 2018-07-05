@@ -91,9 +91,9 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::extractPoints(const pcl::Point
             conditions = inliers->indices.size() != 0 && inliers->indices.size() > INLIER_THRESHOLD;
         } 
         while (conditions);
+        printf("%s", "segment complete");
         for (int i = 0; i < coefficients_vector.size(); i++)
         {
-            printf("%s","segment complete");
             printf("%f %f %f %f\n", coefficients_vector[i]->values[0], coefficients_vector[i]->values[1], coefficients_vector[i]->values[2], coefficients_vector[i]->values[3]);
         }
         // pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> normal_estimation;
