@@ -1,5 +1,4 @@
 #include <pcl/point_types.h>
-#include <pcl/impl/point_types.hpp>
 #include <pcl/point_cloud.h>
 #include <pcl/PCLPointCloud2.h>
 #include <pcl/visualization/cloud_viewer.h>
