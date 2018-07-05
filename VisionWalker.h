@@ -25,6 +25,8 @@ class VisionWalker
     pcl::visualization::CloudViewer* viewer;
     static const int INLIER_THRESHOLD = 20000;
     static const float RANSAC_DISTANCE_THRESHOLD = 0.03;
+    static const float MINIMUM_X = -1;
+    static const float MAXIMUM_X = 1;
 };
 
 #endif

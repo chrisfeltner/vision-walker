@@ -68,6 +68,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::extractPoints(const pcl::Point
     if(!viewer->wasStopped())
     {
         pcl::PointCloud<pcl::PointXYZ>::Ptr passThroughCloud = runPassThroughFilter(cloud, "z", 0.4, 4.0);
+        passThroughCloud = runPassThroughFilter(cloud, "x", MINIMUM_X, MAXIMUM_X);
         pcl::PCLPointCloud2::Ptr passThroughCloud2(new pcl::PCLPointCloud2);
         pcl::toPCLPointCloud2(*passThroughCloud, *passThroughCloud2);
         pcl::PCLPointCloud2::Ptr voxelCloud2 = createVoxelGrid(passThroughCloud2);
