@@ -92,7 +92,8 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::extractPoints(const pcl::Point
         while (conditions);
         for (int i = 0; i < coefficients_vector.size(); i++)
         {
-            printf("%f %f %f %f", coefficients_vector[i]->values[0], coefficients_vector[i]->values[1], coefficients_vector[i]->values[2], coefficients_vector[i]->values[3]);
+            printf("%s","segment complete");
+            printf("%f %f %f %f\n", coefficients_vector[i]->values[0], coefficients_vector[i]->values[1], coefficients_vector[i]->values[2], coefficients_vector[i]->values[3]);
         }
         // pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> normal_estimation;
         // normal_estimation.setInputCloud(voxelCloud);
