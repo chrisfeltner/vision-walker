@@ -83,8 +83,8 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr extractPoints(const pcl::PointCloud<pcl::Poi
             coefficients_vector.push_back(coefficients);
             inliers_vector.push_back(inliers);
             voxelCloud = extractPoints(voxelCloud, inliers);
-            coefficients = new pcl::ModelCoefficients;
-            inliers = new pcl::PointIndices;
+            coefficients (new pcl::ModelCoefficients);
+            inliers (new pcl::PointIndices);
             runPlanarSegmentation(voxelCloud, coefficents, inliers);
         }
         for(int i = 0; i < coefficients_vector.size(); i++)
