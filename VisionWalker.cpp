@@ -40,7 +40,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::runPassThroughFilter(const pcl
     return filteredCloud;
 }
 
-void VisionWalker::segmentFloorPlane(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToSegment, pcl::ModelCoefficients::Ptr coefficients, pcl::PointIndices::Ptr inliers)
+bool VisionWalker::segmentFloorPlane(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToSegment, pcl::ModelCoefficients::Ptr coefficients, pcl::PointIndices::Ptr inliers)
 {
     pcl::SACSegmentation<pcl::PointXYZ> segmentation;
     segmentation.setOptimizeCoefficients(true);
@@ -50,13 +50,20 @@ void VisionWalker::segmentFloorPlane(const pcl::PointCloud<pcl::PointXYZ>::Const
     Eigen::Vector3f axis = Eigen::Vector3f(0.0, 0.0, 1.0);
     segmentation.setAxis(axis);
     segmentation.setEpsAngle(pcl::deg2rad(ANGLE_THRESHOLD));
-
-
     segmentation.setInputCloud(cloudToSegment);
     segmentation.segment(*inliers, *coefficients);
+    if(inliers->indices.size() == 0)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+    
 }
 
-void VisionWalker::segmentWallPlane(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToSegment, pcl::ModelCoefficients::Ptr coefficients, pcl::PointIndices::Ptr inliers)
+std::vector<pcl::PointIndices> VisionWalker::segmentWallPlanes(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToSegment)
 {
     pcl::SACSegmentation<pcl::PointXYZ> segmentation;
     segmentation.setOptimizeCoefficients(true);
@@ -66,9 +73,20 @@ void VisionWalker::segmentWallPlane(const pcl::PointCloud<pcl::PointXYZ>::ConstP
     Eigen::Vector3f axis = Eigen::Vector3f(0.0, 1.0, 0.0);
     segmentation.setAxis(axis);
     segmentation.setEpsAngle(pcl::deg2rad(ANGLE_THRESHOLD));
-
+    std::vector<pcl::PointIndices> inlier_vector;
+    bool finishedSegmentation = false;
     segmentation.setInputCloud(cloudToSegment);
-    segmentation.segment(*inliers, *coefficients);
+    do
+    {
+        pcl::ModelCoefficients::Ptr wall_coefficients(new pcl::ModelCoefficients);
+        pcl::PointIndices::Ptr wall_inliers(new pcl::PointIndices);
+        segmentation.segment(*inliers, *coefficients);
+        if(inliers->indices.size() != 0)
+        {
+            inlier_vector.push_back(wall_inliers);
+        }
+    } while (!finishedSegmentation);
+    return inlier_vector;
 }
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::extractPoints(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointIndices::Ptr inliers)
@@ -95,14 +113,18 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::extractPoints(const pcl::Point
         pcl::fromPCLPointCloud2(*voxelCloud2, *voxelCloud);
         pcl::ModelCoefficients::Ptr floor_coefficients(new pcl::ModelCoefficients);
         pcl::PointIndices::Ptr floor_inliers(new pcl::PointIndices);
-        segmentFloorPlane(voxelCloud, floor_coefficients, floor_inliers);
-        voxelCloud = extractPoints(voxelCloud, floor_inliers);
-        pcl::ModelCoefficients::Ptr wall_coefficients(new pcl::ModelCoefficients);
-        pcl::PointIndices::Ptr wall_inliers(new pcl::PointIndices);
-        segmentWallPlane(voxelCloud, wall_coefficients, wall_inliers);
-        voxelCloud = extractPoints(voxelCloud, wall_inliers);
-
-        viewer->showCloud(voxelCloud);
+        bool isFloor = segmentFloorPlane(voxelCloud, floor_coefficients, floor_inliers);
+        if(isFloor)
+        {
+            voxelCloud = extractPoints(voxelCloud, floor_inliers);
+        }
+        std::vector<pcl::PointIndices> inlier_vector = segmentWallPlane(voxelCloud);
+        for(int i = 0; i < inlier_vector.size(); i++)
+        {
+            voxelCloud = extractPoints(voxelCloud, wall_inliers);
+        }
+        viewer->addPointCloud(voxelCloud, "objects");
+        viewer->spin()
     }
     
 }
