@@ -77,28 +77,28 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::extractPoints(const pcl::Point
         pcl::PCLPointCloud2::Ptr voxelCloud2 = createVoxelGrid(passThroughCloud2);
         pcl::PointCloud<pcl::PointXYZ>::Ptr voxelCloud(new pcl::PointCloud<pcl::PointXYZ>);
         pcl::fromPCLPointCloud2(*voxelCloud2, *voxelCloud);
-        std::vector<pcl::ModelCoefficients::Ptr> coefficients_vector;
-        std::vector<pcl::PointIndices::Ptr> inliers_vector;
-        bool conditions = true;
-        do
-        {
+        // std::vector<pcl::ModelCoefficients::Ptr> coefficients_vector;
+        // std::vector<pcl::PointIndices::Ptr> inliers_vector;
+        // bool conditions = true;
+        // do
+        // {
             pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
             pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
             runPlanarSegmentation(voxelCloud, coefficients, inliers);
-            if(inliers->indices.size() != 0)
-            {
-                coefficients_vector.push_back(coefficients);
-                inliers_vector.push_back(inliers);
-            }
+            // if(inliers->indices.size() != 0)
+            // {
+            //     coefficients_vector.push_back(coefficients);
+            //     inliers_vector.push_back(inliers);
+            // }
             voxelCloud = extractPoints(voxelCloud, inliers);
-            conditions = inliers->indices.size() != 0 && inliers->indices.size() > INLIER_THRESHOLD;
-        } 
-        while (conditions);
-        printf("%s", "segment complete");
-        for (int i = 0; i < coefficients_vector.size(); i++)
-        {
-            printf("%f %f %f %f\n", coefficients_vector[i]->values[0], coefficients_vector[i]->values[1], coefficients_vector[i]->values[2], coefficients_vector[i]->values[3]);
-        }
+        //     conditions = inliers->indices.size() != 0 && inliers->indices.size() > INLIER_THRESHOLD;
+        // } 
+        // while (conditions);
+        // printf("%s", "segment complete");
+        // for (int i = 0; i < coefficients_vector.size(); i++)
+        // {
+        //     printf("%f %f %f %f\n", coefficients_vector[i]->values[0], coefficients_vector[i]->values[1], coefficients_vector[i]->values[2], coefficients_vector[i]->values[3]);
+        // }
         // pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> normal_estimation;
         // normal_estimation.setInputCloud(voxelCloud);
         // pcl::PointCloud<pcl::Normal>::Ptr normal_cloud (new pcl::PointCloud<pcl::Normal>);
