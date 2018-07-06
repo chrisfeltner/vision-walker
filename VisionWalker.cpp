@@ -63,7 +63,7 @@ bool VisionWalker::segmentFloorPlane(const pcl::PointCloud<pcl::PointXYZ>::Const
     
 }
 
-std::vector<pcl::PointIndices> VisionWalker::segmentWallPlanes(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToSegment)
+std::vector<pcl::PointIndices::Ptr> VisionWalker::segmentWallPlanes(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToSegment)
 {
     pcl::SACSegmentation<pcl::PointXYZ> segmentation;
     segmentation.setOptimizeCoefficients(true);
@@ -73,15 +73,15 @@ std::vector<pcl::PointIndices> VisionWalker::segmentWallPlanes(const pcl::PointC
     Eigen::Vector3f axis = Eigen::Vector3f(0.0, 1.0, 0.0);
     segmentation.setAxis(axis);
     segmentation.setEpsAngle(pcl::deg2rad(ANGLE_THRESHOLD));
-    std::vector<pcl::PointIndices> inlier_vector;
+    std::vector<pcl::PointIndices::Ptr> inlier_vector;
     bool finishedSegmentation = false;
     segmentation.setInputCloud(cloudToSegment);
     do
     {
         pcl::ModelCoefficients::Ptr wall_coefficients(new pcl::ModelCoefficients);
         pcl::PointIndices::Ptr wall_inliers(new pcl::PointIndices);
-        segmentation.segment(*inliers, *coefficients);
-        if(inliers->indices.size() != 0)
+        segmentation.segment(*wall_inliers, *wall_coefficients);
+        if(wall_inliers->indices.size() != 0)
         {
             inlier_vector.push_back(wall_inliers);
         }
@@ -118,10 +118,10 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::extractPoints(const pcl::Point
         {
             voxelCloud = extractPoints(voxelCloud, floor_inliers);
         }
-        std::vector<pcl::PointIndices> inlier_vector = segmentWallPlanes(voxelCloud);
+        std::vector<pcl::PointIndices::Ptr> inlier_vector = segmentWallPlanes(voxelCloud);
         for(int i = 0; i < inlier_vector.size(); i++)
         {
-            voxelCloud = extractPoints(voxelCloud, inlier_vector);
+            voxelCloud = extractPoints(voxelCloud, inlier_vector[i]);
         }
         viewer->addPointCloud(voxelCloud, "objects");
         viewer->spin();
