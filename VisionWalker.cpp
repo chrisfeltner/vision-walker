@@ -49,7 +49,7 @@ void VisionWalker::segmentFloorPlane(const pcl::PointCloud<pcl::PointXYZ>::Const
     segmentation.setDistanceThreshold(RANSAC_DISTANCE_THRESHOLD);
     Eigen::Vector3f axis = Eigen::Vector3f(0.0, 0.0, 1.0);
     segmentation.setAxis(axis);
-    segmentation.setEpsAngle(pcl::deg2rad(ANGLE_THRESHOLD);
+    segmentation.setEpsAngle(pcl::deg2rad(ANGLE_THRESHOLD));
 
 
     segmentation.setInputCloud(cloudToSegment);
