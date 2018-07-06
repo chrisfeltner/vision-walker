@@ -118,7 +118,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::extractPoints(const pcl::Point
         {
             voxelCloud = extractPoints(voxelCloud, floor_inliers);
         }
-        std::vector<pcl::PointIndices> inlier_vector = segmentWallPlane(voxelCloud);
+        std::vector<pcl::PointIndices> inlier_vector = segmentWallPlanes(voxelCloud);
         for(int i = 0; i < inlier_vector.size(); i++)
         {
             voxelCloud = extractPoints(voxelCloud, wall_inliers);
