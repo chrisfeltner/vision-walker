@@ -85,6 +85,7 @@ std::vector<pcl::PointIndices::Ptr> VisionWalker::segmentWallPlanes(const pcl::P
         {
             inlier_vector.push_back(wall_inliers);
         }
+        finishedSegmentation = wall_inliers->indices.size() == 0;
     } while (!finishedSegmentation);
     return inlier_vector;
 }
@@ -123,7 +124,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::extractPoints(const pcl::Point
         {
             voxelCloud = extractPoints(voxelCloud, inlier_vector[i]);
         }
-        viewer->showCloud(voxelCloud, "objects");
+        viewer->showCloud(voxelCloud);
     }
     
 }
