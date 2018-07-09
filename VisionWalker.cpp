@@ -85,7 +85,7 @@ std::vector<pcl::PointIndices::Ptr> VisionWalker::segmentWallPlanes(const pcl::P
         {
             inlier_vector.push_back(wall_inliers);
         }
-        finishedSegmentation = wall_inliers->indices.size() == 0;
+        finishedSegmentation = wall_inliers->indices.size() < INLIER_THRESHOLD;
     } while (!finishedSegmentation);
     return inlier_vector;
 }
