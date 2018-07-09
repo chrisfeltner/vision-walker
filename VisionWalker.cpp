@@ -123,8 +123,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::extractPoints(const pcl::Point
         {
             voxelCloud = extractPoints(voxelCloud, inlier_vector[i]);
         }
-        viewer->addPointCloud(voxelCloud, "objects");
-        viewer->spin();
+        viewer->showCloud(voxelCloud, "objects");
     }
     
 }
