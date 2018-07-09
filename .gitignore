@@ -9,3 +9,4 @@ vision-walker/
 DetailedReport.txt
 Summary.txt
 *.pyc
+data/
