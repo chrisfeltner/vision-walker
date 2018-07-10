@@ -32,6 +32,7 @@ class VisionWalker
     static const float MINIMUM_Z = 0.4;
     static const float MAXIMUM_Z = 4.0;
     static const float ANGLE_THRESHOLD = 15.0;
+    static const float OBSTACLE_SIZE_THRESHOLD = 1000;
 };
 
 #endif
