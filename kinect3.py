@@ -12,7 +12,6 @@ from PIL.Image import fromarray
 
 def get_video():
     array, _ = freenect.sync_get_video()
-    array = cv2.cvtColor(array, cv2.COLOR_RGB2BGR)
     return array
 
 # function to get depth image from kinect
@@ -38,6 +37,7 @@ if __name__ == "__main__":
         # display depth image
         # cv2.imshow('Depth image',depth)
         imshow(array)
+        imshow(color)
         f = open('imageoutput.txt', 'w')
         h, w = np.shape(array)
         line = ""
@@ -58,8 +58,3 @@ if __name__ == "__main__":
         # f.write(str(depth[240][320]) + "\n")
 
         # quit program when 'esc' key is pressed
-        k = cv2.waitKey(5) & 0xFF
-        if k == 27:
-            break
-
-    cv2.destroyAllWindows()

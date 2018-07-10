@@ -1,7 +1,8 @@
 import freenect
 import detect2
+import debug_buzzer
 import time
-import example_buzzer
+
 import numpy as np
 
 # Effect codes from the DRV2605's data sheet.
@@ -9,15 +10,22 @@ import numpy as np
 close_vibration = 12  # Triple Click
 medium_vibration = 10  # Double Click
 far_vibration = 1  # Strong Click
-
+debug = True
+if not debug:
+    import example_buzzer
 
 def get_depth():
+    print("Yes")
     array, _ = freenect.sync_get_depth(format=freenect.DEPTH_MM)
+    print("No")
     return array
 
 
 if __name__ == "__main__":
-    vibration_controller = haptic()
+    if not debug:
+        vibration_controller = haptic()
+    else:
+        vibration_controller = debug_buzzer.debug_haptic()
     while 1:
         array = get_depth()
         detection_result = detect2.detect(array, 2, 2000)
