@@ -15,9 +15,7 @@ if not debug:
     import example_buzzer
 
 def get_depth():
-    print("Yes")
     array, _ = freenect.sync_get_depth(format=freenect.DEPTH_MM)
-    print("No")
     return array
 
 

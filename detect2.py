@@ -1,6 +1,6 @@
 import numpy as np
 
-
+DEBUG = True
 # input - Depth image.
 # width - Determines where we pick the y2/x2 for the slope calculation.
 # threshold - Max detection distance.
@@ -50,7 +50,8 @@ def detect(input, width, threshold):
         if array[index] < distance:
             distance = array[index]
         index += 1
-
+	if DEBUG:
+		print("Debug distance is {}".format(distance))
     # We've found an object if the distance is less than our threshold.
     if distance > threshold:
         return -1  # NO OBJECT DETECTED
