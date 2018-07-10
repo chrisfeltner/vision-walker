@@ -108,9 +108,9 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
 
     for(pcl::PointCloud<pcl::PointXYZ>::iterator it = cloud->begin(); it != cloud->end(); it++)
     {
-        if(it->_z < min)
+        if(it->z < min)
         {
-            min = it->_z;
+            min = it->z;
         }
     }
 
