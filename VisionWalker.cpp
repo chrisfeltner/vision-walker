@@ -7,6 +7,7 @@
 #include <pcl/conversions.h>
 #include <pcl/point_types.h>
 #include <pcl/common/time.h>
+#include <pcl/common/angles.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/passthrough.h>
 #include <pcl/filters/extract_indices.h>
