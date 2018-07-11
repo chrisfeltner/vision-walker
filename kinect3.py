@@ -50,8 +50,11 @@ if __name__ == "__main__":
             line = ""
         f.close()
 
-        img = fromarray(color)
-        img.save('test2.png')
+        color_img = fromarray(color)
+        color_img.save('test-color.png')
+		depth_img = fromarray(depth)
+		depth_img.save('test-depth.png')
+		
         # cv2.imwrite('test.png', color)
         # time.sleep(1)
 
