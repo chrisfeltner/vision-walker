@@ -7,15 +7,10 @@ import math
 from scipy.misc import imshow
 from PIL.Image import fromarray
 
-# function to get RGB image from kinect
-
 
 def get_video():
     array, _ = freenect.sync_get_video()
     return array
-
-# function to get depth image from kinect
-
 
 def get_depth():
     array, _ = freenect.sync_get_depth(format=freenect.DEPTH_MM)
@@ -25,23 +20,34 @@ def get_depth():
 if __name__ == "__main__":
     f = open('middlepixel.txt', 'w')
     while 1:
-        # get a frame from RGB camera
-        # frame = get_video()
-        # get a frame from depth sensor
-        array = get_depth()
-        depth = array.astype(np.uint32)
-        color = get_video()
+        keep_images = "n"
+        while keep_images != "y":
+            # Get a frame from RGB camera & depth sensor
+            array = get_depth()
+            depth = array.astype(np.uint8)
+            color = get_video()
 
-        # depth = depth.astype(np.uint16)
-        # display cv2.imshow('RGB image',cv2.Canny(frame, 150, 200))
-        # display depth image
-        # cv2.imshow('Depth image',depth)
-        imshow(array)
-        imshow(color)
-        f = open('imageoutput.txt', 'w')
+            # Display captured frames
+            imshow(array)
+            imshow(color)
+            
+            keep_images = input("Do you wish to keep these images? (y/n): ")
+
+        
+
+        # Get the test number we're going to create
+        with open("answers.txt") as ans:
+            answers = ans.readlines()
+        ans.close()
+
+        answers[0] = str(int(answers[0]) + 1)
+        test_count = int(answers[0])
+
+        # Create output files
+        f = open("test" + str(test_count) + '.txt', 'w')
         h, w = np.shape(array)
         line = ""
-        # print("Thing:" + str(len(array[0])))
+
         for py in range(0, h):  # height
             for px in range(0, w):  # width
                 maths = 0.1236 * math.tan((array[py][px] / 2842.5) + 1.1863)
@@ -51,14 +57,16 @@ if __name__ == "__main__":
         f.close()
 
         color_img = fromarray(color)
-        color_img.save('test-color.png')
+        color_img.save('test{}color.png'.format(test_count))
 		
         depth_img = fromarray(depth)
-        depth_img.save('test-depth.png')
-		
-        # cv2.imwrite('test.png', color)
-        # time.sleep(1)
+        depth_img.save('test{}depth.png'.format(test_count))
 
-        # f.write(str(depth[240][320]) + "\n")
+        is_obstacle = input("Is there an obstacle present? (True/False): ")
+        distance = input("Please input the distance of the object in mm (any if there is none): ")
 
-        # quit program when 'esc' key is pressed
+        answers.append("{} {}".format(is_obstacle, distance))
+
+        with open("answers.txt", w) as ans:
+            ans.writelines(answers)
+        ans.close()
