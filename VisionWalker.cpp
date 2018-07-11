@@ -135,7 +135,12 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
         if(isFloor)
         {
             voxelCloud = extractPoints(voxelCloud, floor_inliers);
+        }    
+        else
+        {
+            std::cout << "\a" std::endl;
         }
+        
         if(voxelCloud->size() >= OBSTACLE_SIZE_THRESHOLD)
         {
             double min = findMinimumDistance(voxelCloud);
@@ -145,11 +150,7 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
         {
             std::cout << "No obstacle detected." << std::endl;
         }
-        // std::vector<pcl::PointIndices::Ptr> inlier_vector = segmentWallPlanes(voxelCloud);
-        // for(int i = 0; i < inlier_vector.size(); i++)
-        // {
-        //     voxelCloud = extractPoints(voxelCloud, inlier_vector[i]);
-        // }
+
         viewer->showCloud(voxelCloud);
     }
     
