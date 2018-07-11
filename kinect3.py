@@ -18,7 +18,7 @@ def get_video():
 
 
 def get_depth():
-    array, _ = freenect.sync_get_depth()
+    array, _ = freenect.sync_get_depth(format=freenect.DEPTH_MM)
     return array
 
 
@@ -29,7 +29,7 @@ if __name__ == "__main__":
         # frame = get_video()
         # get a frame from depth sensor
         array = get_depth()
-        depth = array.astype(np.uint8)
+        depth = array.astype(np.uint32)
         color = get_video()
 
         # depth = depth.astype(np.uint16)
@@ -52,8 +52,9 @@ if __name__ == "__main__":
 
         color_img = fromarray(color)
         color_img.save('test-color.png')
-		depth_img = fromarray(depth)
-		depth_img.save('test-depth.png')
+		
+        depth_img = fromarray(depth)
+        depth_img.save('test-depth.png')
 		
         # cv2.imwrite('test.png', color)
         # time.sleep(1)
