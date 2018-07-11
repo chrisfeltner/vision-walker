@@ -4,6 +4,7 @@
 #include <functional>
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
+#include <curses.h>
 #include <pcl/conversions.h>
 #include <pcl/point_types.h>
 #include <pcl/common/time.h>
@@ -138,7 +139,7 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
         }    
         else
         {
-            std::cout << "\a" << std::endl;
+            beep();
         }
         
         if(voxelCloud->size() >= OBSTACLE_SIZE_THRESHOLD)
