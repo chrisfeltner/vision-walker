@@ -138,7 +138,7 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
         }    
         else
         {
-            std::cout << "\a" std::endl;
+            std::cout << "\a" << std::endl;
         }
         
         if(voxelCloud->size() >= OBSTACLE_SIZE_THRESHOLD)
