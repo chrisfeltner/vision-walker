@@ -126,36 +126,36 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
     {
         if(PASS_THROUGH_FILTER)
         {
-            runPassThroughFilter(newCloud, "z", MINIMUM_Z, MAXIMUM_Z);
-            runPassThroughFilter(newCloud, "x", MINIMUM_X, MAXIMUM_X);
+            runPassThroughFilter(cloud, "z", MINIMUM_Z, MAXIMUM_Z);
+            runPassThroughFilter(cloud, "x", MINIMUM_X, MAXIMUM_X);
         }
 
         if(STATISTICAL_FILTER)
         {
             pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
-            sor.setInputCloud(newCloud);
+            sor.setInputCloud(cloud);
             sor.setMeanK(MEAN_K);
             sor.setStddevMulThresh(STANDARD_DEVIATION);
-            sor.filter(*newCloud);
+            sor.filter(*cloud);
         }
 
         if(VOXEL_FILTER)
         {
-            pcl::PCLPointCloud2::Ptr newCloud2(new pcl::PCLPointCloud2);
-            pcl::toPCLPointCloud2(*newCloud, *newCloud2);
-            createVoxelGrid(newCloud2);
-            pcl::fromPCLPointCloud2(*newCloud2, *newCloud);
+            pcl::PCLPointCloud2::Ptr cloud2(new pcl::PCLPointCloud2);
+            pcl::toPCLPointCloud2(*cloud, *cloud2);
+            createVoxelGrid(cloud2);
+            pcl::fromPCLPointCloud2(*cloud2, *cloud);
         }
 
         if(FLOOR_SEGMENTATION)
         {
             pcl::ModelCoefficients::Ptr floor_coefficients(new pcl::ModelCoefficients);
             pcl::PointIndices::Ptr floor_inliers(new pcl::PointIndices);
-            bool isFloor = segmentFloorPlane(newCloud, floor_coefficients, floor_inliers);
+            bool isFloor = segmentFloorPlane(cloud, floor_coefficients, floor_inliers);
 
             if (isFloor)
             {
-                extractPoints(newCloud, floor_inliers);
+                extractPoints(cloud, floor_inliers);
             }
             else
             {
@@ -165,7 +165,7 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
         
         if(cloud->size() >= OBSTACLE_SIZE_THRESHOLD)
         {
-            double min = findMinimumDistance(newCloud);
+            double min = findMinimumDistance(cloud);
             std::cout << "Minimum distance: " << min << std::endl;
         }
         else
@@ -173,7 +173,7 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
             std::cout << "No obstacle detected." << std::endl;
         }
 
-        viewer->showCloud(newCloud);
+        viewer->showCloud(cloud);
     }
     
 }
