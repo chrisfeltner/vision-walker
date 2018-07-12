@@ -94,7 +94,7 @@ std::vector<pcl::PointIndices::Ptr> VisionWalker::segmentWallPlanes(const pcl::P
     return inlier_vector;
 }
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::extractPoints(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointIndices::Ptr inliers)
+pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::extractPoints(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, pcl::PointIndices::Ptr inliers)
 {
     pcl::ExtractIndices<pcl::PointXYZ> extract;
     pcl::PointCloud<pcl::PointXYZ>::Ptr extractCloud(new pcl::PointCloud<pcl::PointXYZ>);
