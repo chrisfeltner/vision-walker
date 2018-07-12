@@ -144,7 +144,7 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
         {
             pcl::PCLPointCloud2::Ptr newCloud2(new pcl::PCLPointCloud2);
             pcl::toPCLPointCloud2(*newCloud, *newCloud2);
-            cloud2 = createVoxelGrid(newCloud2);
+            newCloud2 = createVoxelGrid(newCloud2);
             pcl::fromPCLPointCloud2(*newCloud2, *newCloud);
         }
 
