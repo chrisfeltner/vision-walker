@@ -21,6 +21,7 @@
 #include <pcl/sample_consensus/method_types.h>
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/segmentation/extract_clusters.h>
+#include <pcl/filters/statistical_outlier_removal.h>
 
 pcl::PCLPointCloud2::Ptr VisionWalker::createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter)
 {
@@ -123,28 +124,49 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
 {
     if(!viewer->wasStopped())
     {
-        pcl::PointCloud<pcl::PointXYZ>::Ptr passThroughCloud = runPassThroughFilter(cloud, "z", MINIMUM_Z, MAXIMUM_Z);
-        passThroughCloud = runPassThroughFilter(cloud, "x", MINIMUM_X, MAXIMUM_X);
-        pcl::PCLPointCloud2::Ptr passThroughCloud2(new pcl::PCLPointCloud2);
-        pcl::toPCLPointCloud2(*passThroughCloud, *passThroughCloud2);
-        pcl::PCLPointCloud2::Ptr voxelCloud2 = createVoxelGrid(passThroughCloud2);
-        pcl::PointCloud<pcl::PointXYZ>::Ptr voxelCloud(new pcl::PointCloud<pcl::PointXYZ>);
-        pcl::fromPCLPointCloud2(*voxelCloud2, *voxelCloud);
-        pcl::ModelCoefficients::Ptr floor_coefficients(new pcl::ModelCoefficients);
-        pcl::PointIndices::Ptr floor_inliers(new pcl::PointIndices);
-        bool isFloor = segmentFloorPlane(voxelCloud, floor_coefficients, floor_inliers);
-        if(isFloor)
+        pcl::PointCloud<pcl::PointXYZ>::Ptr newCloud = cloud;
+        if(PASS_THROUGH_FILTER)
         {
-            voxelCloud = extractPoints(voxelCloud, floor_inliers);
-        }    
-        else
+            newCloud = runPassThroughFilter(newCloud, "z", MINIMUM_Z, MAXIMUM_Z);
+            newCloud = runPassThroughFilter(newCloud, "x", MINIMUM_X, MAXIMUM_X);
+        }
+
+        if(STATISTICAL_FILTER)
         {
-            beep();
+            pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
+            sor.setInputCloud(newCloud);
+            sor.setMeanK(MEAN_K);
+            sor.setStddevMulThresh(STANDARD_DEVIATION);
+            sor.filter(*newCloud);
+        }
+
+        if(VOXEL_FILTER)
+        {
+            pcl::PCLPointCloud2::Ptr newCloud2(new pcl::PCLPointCloud2);
+            pcl::toPCLPointCloud2(*newCloud, *newCloud2);
+            cloud2 = createVoxelGrid(newCloud2);
+            pcl::fromPCLPointCloud2(*newCloud2, *newCloud);
+        }
+
+        if(FLOOR_SEGMENTATION)
+        {
+            pcl::ModelCoefficients::Ptr floor_coefficients(new pcl::ModelCoefficients);
+            pcl::PointIndices::Ptr floor_inliers(new pcl::PointIndices);
+            bool isFloor = segmentFloorPlane(newCloud, floor_coefficients, floor_inliers);
+
+            if (isFloor)
+            {
+                newCloud = extractPoints(newCloud, floor_inliers);
+            }
+            else
+            {
+                //beep
+            }
         }
         
-        if(voxelCloud->size() >= OBSTACLE_SIZE_THRESHOLD)
+        if(cloud->size() >= OBSTACLE_SIZE_THRESHOLD)
         {
-            double min = findMinimumDistance(voxelCloud);
+            double min = findMinimumDistance(newCloud);
             std::cout << "Minimum distance: " << min << std::endl;
         }
         else
@@ -152,7 +174,7 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
             std::cout << "No obstacle detected." << std::endl;
         }
 
-        viewer->showCloud(voxelCloud);
+        viewer->showCloud(newCloud);
     }
     
 }
