@@ -10,3 +10,5 @@ DetailedReport.txt
 Summary.txt
 *.pyc
 data/
+*.txt
+*.png

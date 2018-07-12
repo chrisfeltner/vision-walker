@@ -13,7 +13,7 @@ def get_video():
     return array
 
 def get_depth():
-    array, _ = freenect.sync_get_depth(format=freenect.DEPTH_MM)
+    array, _ = freenect.sync_get_depth()
     return array
 
 
@@ -28,10 +28,10 @@ if __name__ == "__main__":
             color = get_video()
 
             # Display captured frames
-            imshow(array)
-            imshow(color)
+            # imshow(array)
+            # imshow(color)
             
-            keep_images = input("Do you wish to keep these images? (y/n): ")
+            keep_images = raw_input("Do you wish to keep these images? (y/n): ")
 
         
 
@@ -62,11 +62,11 @@ if __name__ == "__main__":
         depth_img = fromarray(depth)
         depth_img.save('test{}depth.png'.format(test_count))
 
-        is_obstacle = input("Is there an obstacle present? (True/False): ")
-        distance = input("Please input the distance of the object in mm (any if there is none): ")
+        is_obstacle = raw_input("Is there an obstacle present? (True/False): ")
+        distance = raw_input("Please input the distance of the object in mm (any if there is none): ")
 
-        answers.append("{} {}".format(is_obstacle, distance))
+        answers.append("\n\n{} {}".format(is_obstacle, str(distance)))
 
-        with open("answers.txt", w) as ans:
+        with open("answers.txt", 'w') as ans:
             ans.writelines(answers)
         ans.close()
