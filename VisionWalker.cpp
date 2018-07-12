@@ -124,11 +124,10 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
 {
     if(!viewer->wasStopped())
     {
-        pcl::PointCloud<pcl::PointXYZ>::Ptr newCloud = cloud;
         if(PASS_THROUGH_FILTER)
         {
-            newCloud = runPassThroughFilter(newCloud, "z", MINIMUM_Z, MAXIMUM_Z);
-            newCloud = runPassThroughFilter(newCloud, "x", MINIMUM_X, MAXIMUM_X);
+            runPassThroughFilter(newCloud, "z", MINIMUM_Z, MAXIMUM_Z);
+            runPassThroughFilter(newCloud, "x", MINIMUM_X, MAXIMUM_X);
         }
 
         if(STATISTICAL_FILTER)
@@ -144,7 +143,7 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
         {
             pcl::PCLPointCloud2::Ptr newCloud2(new pcl::PCLPointCloud2);
             pcl::toPCLPointCloud2(*newCloud, *newCloud2);
-            newCloud2 = createVoxelGrid(newCloud2);
+            createVoxelGrid(newCloud2);
             pcl::fromPCLPointCloud2(*newCloud2, *newCloud);
         }
 
@@ -156,7 +155,7 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
 
             if (isFloor)
             {
-                newCloud = extractPoints(newCloud, floor_inliers);
+                extractPoints(newCloud, floor_inliers);
             }
             else
             {
