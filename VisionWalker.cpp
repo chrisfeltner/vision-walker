@@ -128,8 +128,8 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud
         *myCloud = *cloud;
         if(PASS_THROUGH_FILTER)
         {
-            runPassThroughFilter(myCloud, "z", MINIMUM_Z, MAXIMUM_Z);
-            runPassThroughFilter(myCloud, "x", MINIMUM_X, MAXIMUM_X);
+            myCloud = runPassThroughFilter(myCloud, "z", MINIMUM_Z, MAXIMUM_Z);
+            myCloud = runPassThroughFilter(myCloud, "x", MINIMUM_X, MAXIMUM_X);
         }
 
         if(STATISTICAL_FILTER)
@@ -145,7 +145,7 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud
         {
             pcl::PCLPointCloud2::Ptr cloud2(new pcl::PCLPointCloud2);
             pcl::toPCLPointCloud2(*myCloud, *cloud2);
-            createVoxelGrid(cloud2);
+            cloud2 = createVoxelGrid(cloud2);
             pcl::fromPCLPointCloud2(*cloud2, *myCloud);
         }
 
@@ -157,7 +157,7 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud
 
             if (isFloor)
             {
-                extractPoints(myCloud, floor_inliers);
+                myCloud = extractPoints(myCloud, floor_inliers);
             }
             else
             {
