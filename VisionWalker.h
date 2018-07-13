@@ -22,12 +22,12 @@ class VisionWalker
         WARN_3
     };
 
-    pcl::PCLPointCloud2::Ptr createVoxelGrid(const pcl::PCLPointCloud2::ConstPtr cloudToFilter);
-    pcl::PointCloud<pcl::PointXYZ>::Ptr runPassThroughFilter(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToFilter, const char *field, double min, double max);
-    bool segmentFloorPlane(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToSegment, pcl::ModelCoefficients::Ptr coefficients, pcl::PointIndices::Ptr inliers);
-    std::vector<pcl::PointIndices::Ptr> segmentWallPlanes(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloudToSegment);
-    pcl::PointCloud<pcl::PointXYZ>::Ptr extractPoints(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, pcl::PointIndices::Ptr inliers);
-    double findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
+    pcl::PCLPointCloud2::Ptr createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr runPassThroughFilter(pcl::PointCloud<pcl::PointXYZ>::Ptr cloudToFilter, const char *field, double min, double max);
+    bool segmentFloorPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloudToSegment, pcl::ModelCoefficients::Ptr coefficients, pcl::PointIndices::Ptr inliers);
+    std::vector<pcl::PointIndices::Ptr> segmentWallPlanes(pcl::PointCloud<pcl::PointXYZ>::Ptr cloudToSegment);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr extractPoints(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointIndices::Ptr inliers);
+    double findMinimumDistance(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
     void run();
     void process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud);
 
