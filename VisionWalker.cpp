@@ -120,7 +120,7 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
     return min;
 }
 
-    void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
+void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
 {
     if(!viewer->wasStopped())
     {
@@ -141,7 +141,7 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
 
         if(VOXEL_FILTER)
         {
-            pcl::PCLPointCloud2::Ptr cloud2(new pcl::PCLPointCloud2);
+            const pcl::PCLPointCloud2::ConstPtr cloud2(new pcl::PCLPointCloud2);
             pcl::toPCLPointCloud2(*cloud, *cloud2);
             createVoxelGrid(cloud2);
             pcl::fromPCLPointCloud2(*cloud2, *cloud);
