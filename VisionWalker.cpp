@@ -23,7 +23,7 @@
 #include <pcl/segmentation/extract_clusters.h>
 #include <pcl/filters/statistical_outlier_removal.h>
 
-pcl::PCLPointCloud2::Ptr VisionWalker::createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter)
+pcl::PCLPointCloud2::Ptr VisionWalker::createVoxelGrid(const pcl::PCLPointCloud2::ConstPtr cloudToFilter)
 {
     pcl::PCLPointCloud2::Ptr filteredCloud (new pcl::PCLPointCloud2());
     pcl::VoxelGrid<pcl::PCLPointCloud2> voxelFilter;
@@ -122,6 +122,7 @@ double VisionWalker::findMinimumDistance(const pcl::PointCloud<pcl::PointXYZ>::C
 
 void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
 {
+    pcl::PointCloud<pcl::PointXYZ>::Ptr = reinterpret_cast<pcl::PointCloud<pcl::PointXYZ>(cloud);
     if(!viewer->wasStopped())
     {
         if(PASS_THROUGH_FILTER)
