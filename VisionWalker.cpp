@@ -132,21 +132,21 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud
             myCloud = runPassThroughFilter(myCloud, "x", MINIMUM_X, MAXIMUM_X);
         }
 
-        if(STATISTICAL_FILTER)
-        {
-            pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
-            sor.setInputCloud(myCloud);
-            sor.setMeanK(MEAN_K);
-            sor.setStddevMulThresh(STANDARD_DEVIATION);
-            sor.filter(*myCloud);
-        }
-
         if(VOXEL_FILTER)
         {
             pcl::PCLPointCloud2::Ptr cloud2(new pcl::PCLPointCloud2);
             pcl::toPCLPointCloud2(*myCloud, *cloud2);
             cloud2 = createVoxelGrid(cloud2);
             pcl::fromPCLPointCloud2(*cloud2, *myCloud);
+        }
+
+        if (STATISTICAL_FILTER)
+        {
+            pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
+            sor.setInputCloud(myCloud);
+            sor.setMeanK(MEAN_K);
+            sor.setStddevMulThresh(STANDARD_DEVIATION);
+            sor.filter(*myCloud);
         }
 
         if(FLOOR_SEGMENTATION)
