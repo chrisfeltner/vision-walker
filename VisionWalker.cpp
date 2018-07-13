@@ -122,7 +122,8 @@ double VisionWalker::findMinimumDistance(pcl::PointCloud<pcl::PointXYZ>::Ptr clo
 
 void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
 {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr myCloud = const_cast<pcl::PointCloud<pcl::PointXYZ>::Ptr >(cloud);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr myCloud (new pcl::PointCloud<pcl::PointXYZ>);
+    *myCloud = *cloud;
     if(!viewer->wasStopped())
     {
         if(PASS_THROUGH_FILTER)
