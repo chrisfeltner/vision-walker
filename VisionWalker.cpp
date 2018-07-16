@@ -161,7 +161,7 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud
             }
             else
             {
-                //beep
+                std::cout << "No floor detected! Immediate obstacle!" << std::endl;
             }
         }
         
