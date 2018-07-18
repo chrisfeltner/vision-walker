@@ -8,3 +8,5 @@ local/
 vision-walker/
 *.pyc
 data/
+build/
+*.cmake
