@@ -1,10 +1,8 @@
 #include "VisionWalker.h"
-
 #include <iostream>
 #include <functional>
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
-#include <curses.h>
 #include <pcl/conversions.h>
 #include <pcl/point_types.h>
 #include <pcl/common/time.h>
@@ -23,16 +21,29 @@
 #include <pcl/segmentation/extract_clusters.h>
 #include <pcl/filters/statistical_outlier_removal.h>
 
+// createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter)
+// \brief Downsamples the given PCLPointCloud2. A Voxel Grid is created with cube size of LEAF_SIZE.
+//        Note that this function works with PCLPointCloud2
+// \param cloudToFilter A PCLPointCloud2 pointer
+// \return A pointer to a PCLPointCloud2 which is the filtered cloud
 pcl::PCLPointCloud2::Ptr VisionWalker::createVoxelGrid(pcl::PCLPointCloud2::Ptr cloudToFilter)
 {
     pcl::PCLPointCloud2::Ptr filteredCloud (new pcl::PCLPointCloud2());
     pcl::VoxelGrid<pcl::PCLPointCloud2> voxelFilter;
     voxelFilter.setInputCloud(cloudToFilter);
-    voxelFilter.setLeafSize(0.01f, 0.01f, 0.01f);
+    voxelFilter.setLeafSize(LEAF_SIZE, LEAF_SIZE, LEAF_SIZE);
     voxelFilter.filter(*filteredCloud);
     return filteredCloud;
 }
 
+// runPassThroughFilter(pcl::PointCloud<pcl::PointXYZ>::Ptr cloudToFilter, const char* field, double min, double max)
+// \brief Runs a Pass Through filter. A PT Filter removes any points with a value greater than or less than the 
+//        specified minimum and maximum values
+// \param cloudToFilter A pointer to a point cloud with PointXYZ points
+// \param field A string (char array) indicating the axis to run the filter on ("x" "y" or "z")
+// \param min A minimum pass through value
+// \param max A minimum pass through value
+// \return A pointer to a PointCloud<pcl::PointXYZ> which is the filtered cloud
 pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::runPassThroughFilter(pcl::PointCloud<pcl::PointXYZ>::Ptr cloudToFilter, const char *field, double min, double max)
 {
     pcl::PointCloud<pcl::PointXYZ>::Ptr filteredCloud (new pcl::PointCloud<pcl::PointXYZ>);
@@ -44,6 +55,15 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::runPassThroughFilter(pcl::Poin
     return filteredCloud;
 }
 
+// segmentFloorPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloudToSegment, pcl::ModelCoefficients::Ptr coefficients, pcl::PointIndices::Ptr inliers)
+// \brief Segments the most significant plane parallel to the z-axis. This is assumed to be the floor.
+// \param cloudToSegment A point cloud pointer with PointXYZ points
+// \param coefficients A pointer to a ModelCoefficients object. This object will be set with the coefficients
+//          of the resulting plane model. It is not necessary to know these before running the function.
+//          The equation of a plane is ax + by + cz = d. This object will be set with the values of a, b, c, and d
+//          after running RANSAC.
+// \param inliers A pointer to a PointIndices object. This contains the indices of the inliers to the model.
+// \return bool if there is a floor found, return true. Otherwise false.
 bool VisionWalker::segmentFloorPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloudToSegment, pcl::ModelCoefficients::Ptr coefficients, pcl::PointIndices::Ptr inliers)
 {
     pcl::SACSegmentation<pcl::PointXYZ> segmentation;
@@ -67,6 +87,8 @@ bool VisionWalker::segmentFloorPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloudTo
     
 }
 
+// This function is not used, but is left for reference. Segments all wall planes found ... or at least it tries to.
+// It works in much the same way as segmentFloorPlane
 std::vector<pcl::PointIndices::Ptr> VisionWalker::segmentWallPlanes(pcl::PointCloud<pcl::PointXYZ>::Ptr cloudToSegment)
 {
     pcl::SACSegmentation<pcl::PointXYZ> segmentation;
@@ -94,6 +116,12 @@ std::vector<pcl::PointIndices::Ptr> VisionWalker::segmentWallPlanes(pcl::PointCl
     return inlier_vector;
 }
 
+// extractPoints(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointIndices::Ptr inliers)
+// \brief Extracts the points in the floor plane. Returns the negative of these points, meaning that it returns
+//          the outliers to the floor plane.
+// \param cloud A pointer to a point cloud with points PointXYZ to extract the points from
+// \param inliers A pointer to a PointIndices object which has the indices of plane inliers
+// \return pcl::PointCloud<pcl::PointXYZ>::Ptr A pointer to a point cloud of plane outliers
 pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::extractPoints(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointIndices::Ptr inliers)
 {
     pcl::ExtractIndices<pcl::PointXYZ> extract;
@@ -105,6 +133,11 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr VisionWalker::extractPoints(pcl::PointCloud<
     return extractCloud;
 }
 
+// findMinimumDistance(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+// \brief Iterates through all points in a cloud and returns the minimum z value. Returns
+//          std::numeric_limits<double>::max() if there are no points in the cloud.
+// \param cloud A pointer to a PointCloud with PointXYZ
+// \return double Maximum z value in cloud
 double VisionWalker::findMinimumDistance(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
     double min = std::numeric_limits<double>::max();
@@ -119,19 +152,27 @@ double VisionWalker::findMinimumDistance(pcl::PointCloud<pcl::PointXYZ>::Ptr clo
 
     return min;
 }
-
+// process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
+// \brief This function should be passed as a pointer to OpenNiGrabber. It is called each time a 
+//          point cloud is grabbed from the Kinect by OpenNI.
+// \param cloud A const cloud pointer passed in by OpenNIGrabber
 void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
 {
+    //Stop execution if there is no viewer process
     if(!viewer->wasStopped())
     {
+        //Convert const pointer to pointer
         pcl::PointCloud<pcl::PointXYZ>::Ptr myCloud(new pcl::PointCloud<pcl::PointXYZ>);
         *myCloud = *cloud;
+
+        //Run pass through filter
         if(PASS_THROUGH_FILTER)
         {
             myCloud = runPassThroughFilter(myCloud, "z", MINIMUM_Z, MAXIMUM_Z);
             myCloud = runPassThroughFilter(myCloud, "x", MINIMUM_X, MAXIMUM_X);
         }
 
+        //Run voxel filter. Handle cloud conversions.
         if(VOXEL_FILTER)
         {
             pcl::PCLPointCloud2::Ptr cloud2(new pcl::PCLPointCloud2);
@@ -140,7 +181,8 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud
             pcl::fromPCLPointCloud2(*cloud2, *myCloud);
         }
 
-        if (STATISTICAL_FILTER)
+        //Run statistical filter.
+        if(STATISTICAL_FILTER)
         {
             pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
             sor.setInputCloud(myCloud);
@@ -149,6 +191,7 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud
             sor.filter(*myCloud);
         }
 
+        //Segment floor.
         if(FLOOR_SEGMENTATION)
         {
             pcl::ModelCoefficients::Ptr floor_coefficients(new pcl::ModelCoefficients);
@@ -164,7 +207,8 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud
                 std::cout << "No floor detected! Immediate obstacle!" << std::endl;
             }
         }
-        
+
+        //If the number of points in the cloud is greater than threshold, find minimum z       
         if(myCloud->size() >= OBSTACLE_SIZE_THRESHOLD)
         {
             double min = findMinimumDistance(myCloud);
@@ -180,10 +224,16 @@ void VisionWalker::process(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud
     
 }
 
+// run()
+// \brief Set up OpenNIGrabber and initiate grabber thread. Stop if viewer is closed.
+//          This function is a little tricker because of the callbacks. See this tutorial for
+//          help: http://pointclouds.org/documentation/tutorials/openni_grabber.php
 void VisionWalker::run()
 {
+    //For the uninitiated: https://youtu.be/zIV4poUZAQo
     pcl::Grabber *knightsWhoGrabNi = new pcl::OpenNIGrabber();
 
+    //create a boost::function to pass in as a callback to be called each time a new point cloud is grabbed.
     boost::function<void (const pcl::PointCloud<pcl::PointXYZ>::ConstPtr&)> shrubbery = 
         boost::bind(&VisionWalker::process, this, _1);
 
