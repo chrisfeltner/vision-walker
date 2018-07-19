@@ -14,7 +14,7 @@ for answer in xrange(0, test_count):
 
 for test in xrange(0, test_count):
                 result_string = ""
-                result = detect2.detect_file(str(test + 1) + '.txt', 2, 2500)
+                result = detect2.detect_file("test" + str(test + 1) + '.txt', 2, 2500)
 
                 # Detection returns -1 for no obstacle.
                 if result != -1 and result <= 2500:

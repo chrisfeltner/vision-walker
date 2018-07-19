@@ -19,15 +19,18 @@ def get_depth():
     array, _ = freenect.sync_get_depth()
     return array
 
+def get_depth_mm():
+    array,_ = freenect.sync_get_depth(format=freenect.DEPTH_MM)
+
 
 if __name__ == "__main__":
-    f = open('middlepixel.txt', 'w')
     while 1:
         keep_images = "n"
         while keep_images != "y":
             # Get a frame from RGB camera & depth sensor
             array = get_depth()
             depth = array.astype(np.uint8)
+            depth_mm = get_depth_mm()
             color = get_video()
 
             # Display captured frames
@@ -53,8 +56,7 @@ if __name__ == "__main__":
 
         for py in range(0, h):  # height
             for px in range(0, w):  # width
-                maths = 0.1236 * math.tan((array[py][px] / 2842.5) + 1.1863)
-                line += str(maths) + " "
+                line += str(depth_mm[py][px]) + " "
             f.write(line + "\n\n")
             line = ""
         f.close()

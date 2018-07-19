@@ -17,11 +17,11 @@ def detect(input, width, threshold):
     array = array[array != 0]
 
     # For now we assume super close object mostly filling screen = bad.
-    if len(array) == 0 or len(array) < 260:
+    if len(array) < 200:
         return 1
 
     # Flip the array so that we have it in a more intuitive order.
-    array = array[::-1]
+    # array = array[::-1]
 
     # Index, used to keep track of where we break out of the while loop.
     index = 0
@@ -41,8 +41,11 @@ def detect(input, width, threshold):
         index += width
 
         # Break out of the loop if we have a non-positive slope.
-        if slope < 0:
+        if slope < -2:
             break
+        
+        if slope > 200:
+            return y1
 
     # Continue where we left off from ^
     # Find the lowest y-value, corresponding to the closest point.
@@ -69,10 +72,10 @@ def detect_file(input_file, width, threshold):
 
     array = array[array != 0]
 
-    if len(array) == 0 or len(array) < 300:
+    if len(array) < 200:
         return 1
 
-    array = array[::-1]
+    #array = array[::-1]
 
     index = 0
 
@@ -87,8 +90,12 @@ def detect_file(input_file, width, threshold):
         slope = (y2 - y1) / (x2 - x1)
 
         index += width
-        if slope < 0:
+
+        if slope < -2:
             break
+        
+        if slope > 200:
+            return y1
 
     while index < len(array):
         if array[index] < distance:
