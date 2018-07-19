@@ -11,6 +11,7 @@ close_vibration = 12  # Triple Click
 medium_vibration = 10  # Double Click
 far_vibration = 1  # Strong Click
 debug = True
+
 if not debug:
     import example_buzzer
 
@@ -26,8 +27,9 @@ if __name__ == "__main__":
         vibration_controller = debug_buzzer.debug_haptic()
     while 1:
         array = get_depth()
-        detection_result = detect2.detect(array, 2, 2000)
+        detection_result = obstacle_detection.detect(array, 2, 2000)
 
+        # Provide feedback based on distance
         if detection_result == -1:
             print("No object detected!")
         elif detection_result > 1:
@@ -38,4 +40,5 @@ if __name__ == "__main__":
                 vibration_controller.playEffect(medium_vibration)
             else:
                 vibration_controller.playEffect(close_vibration)
+        # Limiting the amount of times we access the camera
         time.sleep(0.5)

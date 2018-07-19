@@ -10,7 +10,7 @@ You can set up your Virtual Enviroment with the correct version of Python using
 
 `virtualenv python .`
 
-Where python is the command used to access Python 2.7 on your machine, and . is the directory that you would like your virtual environment to be placed (leaving it as a dot places it in the root of your project).
+Where `python` is the command used to access Python 2.7 (required for libfreenect) on your machine, and `.` is the directory that you would like your virtual environment to be placed (leaving it as a dot places it in the root of your project).
 
 Next, you'll want to install all required Python packages using
 `pip install -r requirements.txt`
@@ -20,17 +20,10 @@ Ensure that you are connected to your virtual environment using:
 
 `source environment_folder/bin/activate`
 
-In the project's current state, we have 2 seperate Python files. `kinect.py` is used to collect the depth image from a Kinect camera. This project on GitHub does not support this, however, and is mainly here for reference.
+To begin creating test cases, create a text filed called `answers.txt` that contains a `0` on the first line. Running `python create_test.py` should handle the rest. The script captures an RGB and Depth image from a Kinect camera. You may want to throw out the first couple of images to allow time for the Kinect sensors to warm up. After saving the images, the script will ask whether or not you took an image of an obstacle, and the distance of the obstacle.
 
-The main file for this project is `test_detect.py`. To run this, use the command `python test_detect.py imageoutput.txt`. The program will output whether it detect an obstacle or not.
+### NOTICE! There is currently a bug with create_test.py that requires you to open answers.txt to insert a new line on the first line after creating a test.
 
---------------------------------------
+`python test_haptics.py` runs the Kinect in real time, with future haptic feedback support. Running it with the DEBUG variable set to true will result in silly print messages instead of haptic feedback. 
 
-This branch has additional functions for running through test files, along with an experimental `detect2.py` file.
-
-`detect2.py` requires a `answers.txt` file. The first line of this file is the number of test cases to run though. Each subsequent line will have a boolean True or False corresponding to whether or not the associated depth image contains an object, and an integer corresponding to the actual measured distance of the object, if there is one.
-
-Each line in `answers.txt` requires a depth image saved as either a 1-d or 2-d array in a text file with the name `(test#).txt`.
-
-`kinect2.py` requires libfreenect and its Python bindings to be installed. The files and instructions for libfreenect can be found here: https://github.com/OpenKinect/libfreenect
-
+`python run_tests.py` will run `obstacle_detection.py` on all test cases listed in `answers.txt`. Each test requires a corresponding `test#.txt` file.

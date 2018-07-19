@@ -9,7 +9,7 @@ from PIL.Image import fromarray
 
 
 # NOTE THIS IS CURRENTLY BUGGED DUE TO THE FIRST LINE BEING
-# PRINTED INCORRECTLY
+# PRINTED INCORRECTLY IN ANSWERS.TXT
 
 def get_video():
     array, _ = freenect.sync_get_video()
@@ -30,16 +30,11 @@ if __name__ == "__main__":
             # Get a frame from RGB camera & depth sensor
             array = get_depth()
             depth = array.astype(np.uint8)
+            # Pillow doesn't like mm depths, but we need it anyways
             depth_mm = get_depth_mm()
             color = get_video()
-
-            # Display captured frames
-            # imshow(array)
-            # imshow(color)
             
             keep_images = raw_input("Do you wish to keep these images? (y/n): ")
-
-        
 
         # Get the test number we're going to create
         with open("answers.txt") as ans:
