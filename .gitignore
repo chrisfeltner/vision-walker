@@ -12,3 +12,5 @@ Summary.txt
 data/
 *.txt
 *.png
+build/
+*.cmake
