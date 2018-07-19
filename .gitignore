@@ -6,7 +6,11 @@ imageoutput.txt
 .vscode/
 local/
 vision-walker/
+DetailedReport.txt
+Summary.txt
 *.pyc
 data/
+*.txt
+*.png
 build/
 *.cmake
