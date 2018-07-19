@@ -50,8 +50,8 @@ def detect(input, width, threshold):
         if array[index] < distance:
             distance = array[index]
         index += 1
-	if DEBUG:
-		print("Debug distance is {}".format(distance))
+    if DEBUG:
+	    print("Debug distance is {}".format(distance))
     # We've found an object if the distance is less than our threshold.
     if distance > threshold:
         return -1  # NO OBJECT DETECTED

@@ -89,8 +89,8 @@ class Detector(object):
         self.remove_zero_values(averaged_array)
         segments = self.linear_segmentation(averaged_array)
         plot.plot(averaged_array)
-        for segment in segments:
-            plot.axvline(x=segment, color='k', linestyle='--')
+        # for segment in segments:
+            # plot.axvline(x=segment, color='k', linestyle='--')
         plot.show()       
 
     def bottom_up_segmentation(self, averaged_array, max_error):
@@ -108,11 +108,11 @@ class Detector(object):
 
 if __name__ == '__main__':
     dt = Detector()
-    array = dt.get_average_values(25,np.loadtxt('data/6.txt'))
+    array = dt.get_average_values(25,np.loadtxt('NewWalkerTesting/test7.txt'))
     print(np.std(array))
     print(dt.remove_zero_values(array))
     array = dt.remove_zero_values(array)
-    segments = dt.linear_segmentation(array)
-    print(segments)
-    print(dt.get_distance_from_object(array))
+    # segments = dt.linear_segmentation(array)
+    # print(segments)
+    # print(dt.get_distance_from_object(array))
     dt.plot_segmentation(array)
