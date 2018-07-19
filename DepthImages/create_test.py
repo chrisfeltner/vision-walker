@@ -8,6 +8,9 @@ from scipy.misc import imshow
 from PIL.Image import fromarray
 
 
+# NOTE THIS IS CURRENTLY BUGGED DUE TO THE FIRST LINE BEING
+# PRINTED INCORRECTLY
+
 def get_video():
     array, _ = freenect.sync_get_video()
     return array

@@ -1,4 +1,4 @@
-import detect2
+import obstacle_detection
 
 answer_file = open('answers.txt', 'r')
 # First line of answers.txt is the number of tests.
