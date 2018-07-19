@@ -1,5 +1,5 @@
 import freenect
-import detect2
+import obstacle_detection
 import debug_buzzer
 import time
 
