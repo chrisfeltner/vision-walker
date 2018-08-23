@@ -1,6 +1,38 @@
 import numpy as np
-
 DEBUG = True
+
+
+# image - Depth image file. (For testing)
+# width - Column width to detect
+def change_this_name(image, width):
+    # array = np.loadtxt(image_file)
+
+    h, w = np.shape(array)
+    middle = (int)(w / 2)
+
+    closest_distance = -1
+
+    for column in range(middle - width, middle + width):
+        column_distance = -1
+        column_array = array[:, column]
+
+        column_distance = detect(column_array, 2, 2000)
+
+        if column == middle:
+            print("Normally {} would be your output".format(column_distance))
+
+        if column_distance != -1:
+            if closest_distance == -1:
+                # print("Before: Column distance is {} closest distance is {}".format(column_distance, closest_distance))
+                closest_distance = column_distance
+            elif closest_distance > column_distance and column_distance > 100:
+                closest_distance = column_distance
+        # print("After: Column distance is {} closest distance is {}".format(column_distance, closest_distance))
+        # print("Closest distance is {}".format(closest_distance))
+    # print("Going to return {}".format(closest_distance))
+    return closest_distance
+
+
 # input - Depth image.
 # width - Determines where we pick the y2/x2 for the slope calculation.
 # threshold - Max detection distance.
@@ -21,6 +53,7 @@ def detect(input, width, threshold):
         return 1
 
     # Flip the array so that we have it in a more intuitive order.
+    # Camera is flipped on walker, not currently needed.
     # array = array[::-1]
 
     # Index, used to keep track of where we break out of the while loop.
@@ -43,7 +76,7 @@ def detect(input, width, threshold):
         # Break out of the loop if we have a non-positive slope.
         if slope < -2:
             break
-        
+
         if slope > 200:
             return y1
 
@@ -54,7 +87,7 @@ def detect(input, width, threshold):
             distance = array[index]
         index += 1
     if DEBUG:
-	    print("Debug distance is {}".format(distance))
+        print("Debug distance is {}".format(distance))
     # We've found an object if the distance is less than our threshold.
     if distance > threshold:
         return -1  # NO OBJECT DETECTED
@@ -75,7 +108,7 @@ def detect_file(input_file, width, threshold):
     if len(array) < 200:
         return 1
 
-    #array = array[::-1]
+    # array = array[::-1]
 
     index = 0
 
@@ -93,7 +126,7 @@ def detect_file(input_file, width, threshold):
 
         if slope < -2:
             break
-        
+
         if slope > 200:
             return y1
 
