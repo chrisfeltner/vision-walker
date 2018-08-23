@@ -2,15 +2,15 @@ import freenect
 import obstacle_detection
 import debug_buzzer
 import time
+import config
 
 # Effect codes from the DRV2605's data sheet.
 # https://learn.adafruit.com/assets/21843
 close_vibration = 12  # Triple Click
 medium_vibration = 10  # Double Click
 far_vibration = 1  # Strong Click
-debug = True
 
-if not debug:
+if not config.DEBUG:
     import example_buzzer
 
 
@@ -45,13 +45,13 @@ if __name__ == "__main__":
 
 
 if __name__ == "__main__":
-    if not debug:
+    if not config.DEBUG:
         vibration_controller = example_buzzer.haptic()
     else:
         vibration_controller = debug_buzzer.debug_haptic()
     while 1:
         array = get_depth()
-        detection_result = obstacle_detection.detect(array, 2, 2000)
+        detection_result = obstacle_detection.detect(2, image=array)
 
         # Provide feedback based on distance
         if detection_result == -1:

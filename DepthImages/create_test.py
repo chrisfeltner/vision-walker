@@ -1,10 +1,6 @@
 # import the necessary modules
 import freenect
 import numpy as np
-import sys
-import time
-import math
-from scipy.misc import imshow
 from PIL.Image import fromarray
 
 
@@ -15,12 +11,14 @@ def get_video():
     array, _ = freenect.sync_get_video()
     return array
 
+
 def get_depth():
     array, _ = freenect.sync_get_depth()
     return array
 
+
 def get_depth_mm():
-    array,_ = freenect.sync_get_depth(format=freenect.DEPTH_MM)
+    array, _ = freenect.sync_get_depth(format=freenect.DEPTH_MM)
 
 
 if __name__ == "__main__":
@@ -33,7 +31,7 @@ if __name__ == "__main__":
             # Pillow doesn't like mm depths, but we need it anyways
             depth_mm = get_depth_mm()
             color = get_video()
-            
+
             keep_images = raw_input("Do you wish to keep these images? (y/n): ")
 
         # Get the test number we're going to create
@@ -58,7 +56,7 @@ if __name__ == "__main__":
 
         color_img = fromarray(color)
         color_img.save('test{}color.png'.format(test_count))
-		
+
         depth_img = fromarray(depth)
         depth_img.save('test{}depth.png'.format(test_count))
 

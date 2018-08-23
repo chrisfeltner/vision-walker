@@ -1,1 +1,2 @@
 DEBUG = True
+MAX_DISTANCE = 2000

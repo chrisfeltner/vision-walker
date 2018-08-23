@@ -1,5 +1,5 @@
 import numpy as np
-DEBUG = True
+import config
 
 
 # image - Depth image file. (For testing)
@@ -7,16 +7,16 @@ DEBUG = True
 def change_this_name(image, width):
     # array = np.loadtxt(image_file)
 
-    h, w = np.shape(array)
+    h, w = np.shape(image)
     middle = (int)(w / 2)
 
     closest_distance = -1
 
     for column in range(middle - width, middle + width):
         column_distance = -1
-        column_array = array[:, column]
+        column_array = image[:, column]
 
-        column_distance = detect(column_array, 2, 2000)
+        column_distance = detect(2, image=column_array)
 
         if column == middle:
             print("Normally {} would be your output".format(column_distance))
@@ -30,14 +30,19 @@ def change_this_name(image, width):
         # print("After: Column distance is {} closest distance is {}".format(column_distance, closest_distance))
         # print("Closest distance is {}".format(closest_distance))
     # print("Going to return {}".format(closest_distance))
+    if closest_distance > config.MAX_DISTANCE:
+        return -1
+
     return closest_distance
 
 
 # input - Depth image.
 # width - Determines where we pick the y2/x2 for the slope calculation.
-# threshold - Max detection distance.
-def detect(input, width, threshold):
-    array = input
+def detect(width, image=None, image_file=None):
+    if image_file is None:
+        array = image
+    else:
+        array = np.loadtxt(image_file)
 
     # Only required if we're not averageing the array by this point.
     # Gets the 640 x 480 array and turns it into a 1-d array across the middle.
@@ -86,56 +91,10 @@ def detect(input, width, threshold):
         if array[index] < distance:
             distance = array[index]
         index += 1
-    if DEBUG:
+    if config.DEBUG:
         print("Debug distance is {}".format(distance))
     # We've found an object if the distance is less than our threshold.
-    if distance > threshold:
-        return -1  # NO OBJECT DETECTED
-    else:
-        return distance  # OBJECT DETECTED
-
-
-# Same as above, but we read the depth image from a file
-def detect_file(input_file, width, threshold):
-    array = np.loadtxt(input_file)
-
-    if len(np.shape(array)) > 1:
-        h, w = np.shape(array)
-        array = array[:, w / 2]
-
-    array = array[array != 0]
-
-    if len(array) < 200:
-        return 1
-
-    # array = array[::-1]
-
-    index = 0
-
-    distance = 9999
-
-    while index < len(array) - width:
-        x1 = index
-        y1 = array[index]
-        x2 = index + width
-        y2 = array[index + width]
-
-        slope = (y2 - y1) / (x2 - x1)
-
-        index += width
-
-        if slope < -2:
-            break
-
-        if slope > 200:
-            return y1
-
-    while index < len(array):
-        if array[index] < distance:
-            distance = array[index]
-        index += 1
-
-    if distance > threshold:
+    if distance > config.MAX_DISTANCE:
         return -1  # NO OBJECT DETECTED
     else:
         return distance  # OBJECT DETECTED

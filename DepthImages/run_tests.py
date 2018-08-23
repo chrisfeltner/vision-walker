@@ -1,4 +1,5 @@
 import obstacle_detection
+import config
 
 answer_file = open('answers.txt', 'r')
 # First line of answers.txt is the number of tests.
@@ -14,10 +15,10 @@ for answer in xrange(0, test_count):
 
 for test in xrange(0, test_count):
                 result_string = ""
-                result = detect2.detect_file("test" + str(test + 1) + '.txt', 2, 2500)
+                result = obstacle_detection.detect(2, image_file="test" + str(test + 1) + '.txt')
 
                 # Detection returns -1 for no obstacle.
-                if result != -1 and result <= 2500:
+                if result != -1 and result <= config.MAX_DISTANCE:
                     if answers[test][0] == 'True':
                         result_string = "Correct True"
                     elif answers[test][0] == 'False':
