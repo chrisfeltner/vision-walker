@@ -7,6 +7,8 @@ import config
 def change_this_name(image, width):
     # array = np.loadtxt(image_file)
 
+    # print("CONFIG IS {} ".format(config.MAX_DISTANCE))
+
     h, w = np.shape(image)
     middle = (int)(w / 2)
 
@@ -20,6 +22,9 @@ def change_this_name(image, width):
 
         if column == middle:
             print("Normally {} would be your output".format(column_distance))
+
+        if column_distance == -1:
+			print("No obstacle in column {}".format(column))		
 
         if column_distance != -1:
             if closest_distance == -1:
@@ -79,7 +84,7 @@ def detect(width, image=None, image_file=None):
         index += width
 
         # Break out of the loop if we have a non-positive slope.
-        if slope < -2:
+        if slope < -20:
             break
 
         if slope > 200:

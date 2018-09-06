@@ -19,6 +19,7 @@ def get_depth():
 
 def get_depth_mm():
     array, _ = freenect.sync_get_depth(format=freenect.DEPTH_MM)
+    return array
 
 
 if __name__ == "__main__":
